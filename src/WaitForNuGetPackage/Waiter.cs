@@ -1,6 +1,8 @@
-// Copyright (c) Martin Costello, 2024. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2024. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using Microsoft.Extensions.Logging;
+using NuGet.Protocol.Catalog;
 using Spectre.Console;
 
 namespace MartinCostello.WaitForNuGetPackage;
@@ -24,9 +26,65 @@ public static class Waiter
         IReadOnlyCollection<string> args,
         CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        ArgumentNullException.ThrowIfNull(args);
 
-        console.WriteLine($"Arguments: [ {string.Join(", ", args)} ]");
+        using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+        using var httpClient = new HttpClient();
+
+        var jsonClient = new SimpleHttpClient(httpClient, loggerFactory.CreateLogger<SimpleHttpClient>());
+        var client = new CatalogClient(jsonClient, loggerFactory.CreateLogger<CatalogClient>());
+        var leafProcessor = new CatalogLeafProcessor(console, cancellationToken);
+
+        var cursor = new InMemoryCursor();
+        var settings = new CatalogProcessorSettings()
+        {
+            DefaultMinCommitTimestamp = DateTimeOffset.UtcNow.AddMinutes(-10),
+            ExcludeRedundantLeaves = false,
+        };
+
+        var processor = new CatalogProcessor(
+            cursor,
+            client,
+            leafProcessor,
+            settings,
+            loggerFactory.CreateLogger<CatalogProcessor>());
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            if (!await processor.ProcessAsync())
+            {
+                break;
+            }
+        }
+
         return await Task.FromResult(0);
+    }
+
+    private sealed class CatalogLeafProcessor(IAnsiConsole console, CancellationToken cancellationToken) : ICatalogLeafProcessor
+    {
+        public Task<bool> ProcessPackageDeleteAsync(PackageDeleteCatalogLeaf leaf)
+        {
+            console.WriteLine($"{leaf.CommitTimestamp:O}: Found package delete leaf for {leaf.PackageId} {leaf.PackageVersion}.");
+            return Task.FromResult(!cancellationToken.IsCancellationRequested);
+        }
+
+        public Task<bool> ProcessPackageDetailsAsync(PackageDetailsCatalogLeaf leaf)
+        {
+            console.WriteLine($"{leaf.CommitTimestamp:O}: Found package details leaf for {leaf.PackageId} {leaf.PackageVersion}.");
+            return Task.FromResult(!cancellationToken.IsCancellationRequested);
+        }
+    }
+
+    private sealed class InMemoryCursor : ICursor
+    {
+        public DateTimeOffset? Value { get; set; }
+
+        public Task<DateTimeOffset?> GetAsync() => Task.FromResult(Value);
+
+        public Task SetAsync(DateTimeOffset value)
+        {
+            Value = value;
+            return Task.CompletedTask;
+        }
     }
 }

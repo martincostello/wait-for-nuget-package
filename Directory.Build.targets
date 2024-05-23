@@ -1,8 +1,7 @@
 <Project>
-  <ItemGroup Condition=" '$(IsTestProject)' == 'true' ">
-    <Using Include="Shouldly" />
-    <Using Include="Xunit" />
-    <Using Include="Xunit.Abstractions" />
+  <ItemGroup>
+    <Using Include="System.Globalization" />
+    <Using Include="System.Text" />
   </ItemGroup>
   <PropertyGroup>
     <CommitBranch Condition=" '$(CommitBranch)' == '' ">$(BUILD_SOURCEBRANCHNAME)</CommitBranch>
@@ -19,7 +18,7 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="CommitBranch" />
     </Exec>
     <ItemGroup>
-      <AssemblyMetadata Include="BuildTimestamp" Value="$([System.DateTime]::UtcNow.ToString(yyyy-MM-ddTHH:mm:ssK))" />
+      <AssemblyMetadata Include="BuildTimestamp" Value="$([System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssK'))" />
       <AssemblyMetadata Include="CommitHash" Value="$(CommitHash)" Condition=" $(CommitHash) != '' " />
       <AssemblyMetadata Include="CommitBranch" Value="$(CommitBranch)" Condition=" $(CommitBranch) != '' " />
     </ItemGroup>
