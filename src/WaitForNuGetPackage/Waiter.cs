@@ -12,6 +12,8 @@ namespace MartinCostello.WaitForNuGetPackage;
 /// </summary>
 public static class Waiter
 {
+    //// See https://github.com/NuGet/Samples/blob/ec30a2b7c54c2d09e5a476444a2c7a8f2f289d49/CatalogReaderExample
+
     /// <summary>
     /// Waits for a new version of one or more NuGet packages to be published as an asynchronous operation.
     /// </summary>
