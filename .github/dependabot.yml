@@ -11,6 +11,9 @@ updates:
 - package-ecosystem: nuget
   directory: "/"
   groups:
+    Spectre.Console:
+      patterns:
+        - Spectre.Console*
     xunit:
       patterns:
         - xunit*
@@ -22,7 +25,7 @@ updates:
     - "martincostello"
   open-pull-requests-limit: 99
 - package-ecosystem: npm
-  directory: "/src/CHANGE_ME"
+  directory: "/src/WaitForNuGetPackage"
   schedule:
     interval: daily
     time: "05:30"

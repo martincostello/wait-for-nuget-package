@@ -5,11 +5,11 @@
   <PropertyGroup>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <AnalysisMode>All</AnalysisMode>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)CHANGE_ME.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)WaitForNuGetPackage.snk</AssemblyOriginatorKeyFile>
     <Authors>martin_costello</Authors>
     <ChecksumAlgorithm>SHA256</ChecksumAlgorithm>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CHANGE_ME.ruleset</CodeAnalysisRuleSet>
-    <Company>https://github.com/martincostello/CHANGE_ME</Company>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)WaitForNuGetPackage.ruleset</CodeAnalysisRuleSet>
+    <Company>https://github.com/martincostello/wait-for-nuget-package</Company>
     <ContinuousIntegrationBuild Condition=" '$(CI)' != '' ">true</ContinuousIntegrationBuild>
     <Copyright>Martin Costello (c) $([System.DateTime]::Now.ToString(yyyy))</Copyright>
     <DebugType>embedded</DebugType>
@@ -27,16 +27,17 @@
     <Nullable>enable</Nullable>
     <PackageIcon></PackageIcon>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/martincostello/CHANGE_ME</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/martincostello/wait-for-nuget-package</PackageProjectUrl>
     <PackageReadmeFile>package-readme.md</PackageReadmeFile>
     <PackageReleaseNotes>See $(PackageProjectUrl)/releases for details.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>CHANGE_ME</PackageTags>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageTags>nuget</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <StrongNamePublicKey Condition=" '$(SignAssembly)' == 'true'">00240000048000009400000006020000002400005253413100040000010001004b0b2efbada897147aa03d2076278890aefe2f8023562336d206ec8a719b06e89461c31b43abec615918d509158629f93385930c030494509e418bf396d69ce7dbe0b5b2db1a81543ab42777cb98210677fed69dbeb3237492a7ad69e87a1911ed20eb2d7c300238dc6f6403e3d04a1351c5cb369de4e022b18fbec70f7d21ed</StrongNamePublicKey>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <UseArtifactsOutput>true</UseArtifactsOutput>
