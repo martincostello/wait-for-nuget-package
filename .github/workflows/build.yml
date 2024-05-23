@@ -2,11 +2,8 @@ name: build
 
 on:
   push:
-    #branches: [ main ]
-    paths-ignore:
-      - '**/*.gitattributes'
-      - '**/*.gitignore'
-      - '**/*.md'
+    branches: [ main ]
+    tags: [ v* ]
   pull_request:
     branches:
       - main
@@ -14,51 +11,195 @@ on:
       - dotnet-nightly
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-  DOTNET_MULTILEVEL_LOOKUP: 0
-  DOTNET_NOLOGO: true
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
-  FORCE_COLOR: 3
   NUGET_XMLDOC_MODE: skip
   TERM: xterm
+
+permissions:
+  contents: read
 
 jobs:
   build:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
+    outputs:
+      dotnet-sdk-version: ${{ steps.setup-dotnet.outputs.dotnet-version }}
+      dotnet-validate-version: ${{ steps.get-dotnet-validate-version.outputs.dotnet-validate-version }}
+
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+
     strategy:
       fail-fast: false
       matrix:
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
         include:
           - os: macos-latest
-            codecov_os: macos
+            os-name: macos
           - os: ubuntu-latest
-            codecov_os: linux
+            os-name: linux
           - os: windows-latest
-            codecov_os: windows
+            os-name: windows
 
     steps:
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+      id: setup-dotnet
 
-    - name: Build, Test and Publish
+    - name: Build, Test and Package
       shell: pwsh
       run: ./build.ps1
 
-    - uses: codecov/codecov-action@v4
+    - uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4.4.1
       name: Upload coverage to Codecov
+      # TODO Enable when public and token configured
+      if: false
       with:
         file: ./artifacts/coverage/coverage.cobertura.xml
-        flags: ${{ matrix.codecov_os }}
+        flags: ${{ matrix.os-name }}
         token: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@e8d2a6937ecead383dfe75190d104edd1f9c5751 # v0.16.0
+      with:
+        artifact-name: build-${{ matrix.os-name }}.spdx.json
+        output-file: ./artifacts/build.spdx.json
+        path: ./artifacts/bin
+        upload-release-assets: ${{ runner.os == 'Windows' }}
+
+    - name: Attest artifacts
+      uses: actions/attest-build-provenance@173725a1209d09b31f9d30a3890cf2757ebbff0d # v1.1.2
+      # TODO Enable when public
+      if: false
+        #runner.os == 'Windows' &&
+        #github.event.repository.fork == false &&
+        #(github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
+      with:
+        subject-path: |
+          ./artifacts/publish/WaitForNuGetPackage/release*/WaitForNuGetPackage*.dll
+          ./artifacts/publish/WaitForNuGetPackage/release*/WaitForNuGetPackage.exe
+          ./artifacts/package/release/*
+
+    - name: Publish artifacts
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+      with:
+        name: artifacts-${{ matrix.os-name }}
+        path: ./artifacts
+
+    - name: Publish NuGet packages
+      uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+      with:
+        name: packages-${{ matrix.os-name }}
+        path: ./artifacts/package/release
+        if-no-files-found: error
+
+    - name: Get dotnet-validate version
+      id: get-dotnet-validate-version
+      shell: pwsh
+      run: |
+        $dotnetValidateVersion = (Get-Content "./.config/dotnet-tools.json" | Out-String | ConvertFrom-Json).tools.'dotnet-validate'.version
+        "dotnet-validate-version=${dotnetValidateVersion}" >> $env:GITHUB_OUTPUT
+
+  validate-packages:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Download packages
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+      with:
+        name: packages-windows
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+      with:
+        dotnet-version: ${{ needs.build.outputs.dotnet-sdk-version }}
+
+    - name: Validate NuGet packages
+      shell: pwsh
+      env:
+        DOTNET_VALIDATE_VERSION: ${{ needs.build.outputs.dotnet-validate-version }}
+      run: |
+        dotnet tool install --global dotnet-validate --version ${env:DOTNET_VALIDATE_VERSION}
+        $packages = Get-ChildItem -Filter "*.nupkg" | ForEach-Object { $_.FullName }
+        $invalidPackages = 0
+        foreach ($package in $packages) {
+          dotnet validate package local $package
+          if ($LASTEXITCODE -ne 0) {
+            $invalidPackages++
+          }
+        }
+        if ($invalidPackages -gt 0) {
+          Write-Output "::error::$invalidPackages NuGet package(s) failed validation."
+        }
+
+  publish-feedz-io:
+    needs: [ build, validate-packages ]
+    runs-on: ubuntu-latest
+    if: |
+      github.event.repository.fork == false &&
+      (github.ref_name == github.event.repository.default_branch ||
+       startsWith(github.ref, 'refs/tags/v'))
+
+    environment:
+      name: feedz.io
+      url: https://feedz.io/org/${{ github.repository_owner }}/repository/wait-for-nuget-package/packages/MartinCostello.WaitForNuGetPackage
+
+    steps:
+
+    - name: Download packages
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+      with:
+        name: packages-windows
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+      with:
+        dotnet-version: ${{ needs.build.outputs.dotnet-sdk-version }}
+
+    - name: Push NuGet packages to feedz.io
+      shell: bash
+      env:
+        API_KEY: ${{ secrets.FEEDZ_IO_TOKEN }}
+        SOURCE: "https://f.feedz.io/${{ github.repository }}/nuget/index.json"
+      run: dotnet nuget push "*.nupkg" --api-key ${API_KEY} --skip-duplicate --source ${SOURCE}
+
+  publish-nuget:
+    needs: [ build, validate-packages ]
+    runs-on: ubuntu-latest
+    if: |
+      github.event.repository.fork == false &&
+      startsWith(github.ref, 'refs/tags/v')
+
+    environment:
+      name: NuGet.org
+      url: https://www.nuget.org/packages/MartinCostello.WaitForNuGetPackage
+
+    steps:
+
+    - name: Download packages
+      uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+      with:
+        name: packages-windows
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+      with:
+        dotnet-version: ${{ needs.build.outputs.dotnet-sdk-version }}
+
+    - name: Push NuGet packages to NuGet.org
+      shell: bash
+      env:
+        API_KEY: ${{ secrets.NUGET_TOKEN }}
+        SOURCE: https://api.nuget.org/v3/index.json
+      run: dotnet nuget push "*.nupkg" --api-key ${API_KEY} --skip-duplicate --source ${SOURCE}
