@@ -30,7 +30,7 @@ public static class Waiter
     {
         ArgumentNullException.ThrowIfNull(args);
 
-        using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+        using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
         using var httpClient = new HttpClient();
 
         var jsonClient = new SimpleHttpClient(httpClient, loggerFactory.CreateLogger<SimpleHttpClient>());
@@ -51,6 +51,9 @@ public static class Waiter
             settings,
             loggerFactory.CreateLogger<CatalogProcessor>());
 
+        // TODO Implement the logic:
+        // - Have a --timeout option to specify how long to wait for the package(s) to be published
+        // - Once all the packages have been found (optionally with a version), then need to wait for them to be indexed
         while (!cancellationToken.IsCancellationRequested)
         {
             if (!await processor.ProcessAsync())
@@ -65,14 +68,11 @@ public static class Waiter
     private sealed class CatalogLeafProcessor(IAnsiConsole console, CancellationToken cancellationToken) : ICatalogLeafProcessor
     {
         public Task<bool> ProcessPackageDeleteAsync(PackageDeleteCatalogLeaf leaf)
-        {
-            console.WriteLine($"{leaf.CommitTimestamp:O}: Found package delete leaf for {leaf.PackageId} {leaf.PackageVersion}.");
-            return Task.FromResult(!cancellationToken.IsCancellationRequested);
-        }
+            => Task.FromResult(!cancellationToken.IsCancellationRequested);
 
         public Task<bool> ProcessPackageDetailsAsync(PackageDetailsCatalogLeaf leaf)
         {
-            console.WriteLine($"{leaf.CommitTimestamp:O}: Found package details leaf for {leaf.PackageId} {leaf.PackageVersion}.");
+            console.MarkupLine($"{leaf.CommitTimestamp:O}: [white on purple]{leaf.PackageId} {leaf.PackageVersion}[/]");
             return Task.FromResult(!cancellationToken.IsCancellationRequested);
         }
     }
