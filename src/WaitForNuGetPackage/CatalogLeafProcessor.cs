@@ -9,6 +9,7 @@ internal sealed class CatalogLeafProcessor(
     PackageWaitContext context,
     CancellationTokenSource cancellationTokenSource) : ICatalogLeafProcessor
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public Task<bool> ProcessPackageDeleteAsync(PackageDeleteCatalogLeaf leaf)
         => NotCancelled();
 
