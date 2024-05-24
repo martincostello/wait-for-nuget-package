@@ -123,7 +123,7 @@ The repository is hosted in [GitHub][repo]: <https://github.com/martincostello/w
 This project is licensed under the [Apache 2.0][license] license.
 
 [build-badge]: https://github.com/martincostello/wait-for-nuget-package/actions/workflows/build.yml/badge.svg?branch=main&event=push
-[build-status]: https://github.com/martincostello/wait-for-nuget-package/actions/workflows/build.yml/badge.svg?branch=main&event=push "Continuous Integration for this project"
+[build-status]:https://github.com/martincostello/wait-for-nuget-package/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush "Continuous Integration for this project"
 [coverage-badge]: https://codecov.io/gh/martincostello/wait-for-nuget-package/branch/main/graph/badge.svg
 [coverage-report]: https://codecov.io/gh/martincostello/wait-for-nuget-package "Code coverage report for this project"
 [dotnet-sdk]: https://dotnet.microsoft.com/download "Download the .NET SDK"
