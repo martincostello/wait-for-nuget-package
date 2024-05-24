@@ -68,9 +68,10 @@ internal static class ServiceCollectionExtensions
                 LogLevel.Warning;
 
             builder.AddConsole()
+                   .AddFilter("Microsoft", LogLevel.Warning)
                    .AddFilter("NuGet", LogLevel.Warning)
                    .AddFilter("Polly", LogLevel.Error)
-                   .AddFilter("System.Net.Http.HttpClient", LogLevel.Warning)
+                   .AddFilter("System", LogLevel.Warning)
                    .SetMinimumLevel(level);
         });
 
