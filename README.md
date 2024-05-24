@@ -61,16 +61,16 @@ dotnet wait-for-package MyPackage --timeout 00:15:00
 > Wait for any new version of a package to have be published within the last 30 minutes
 
 ```console
-dotnet bumper MyPackage --since 00:30:00
+dotnet wait-for-package MyPackage --since 00:30:00
 ```
 
 > Wait for a new version of a package to be published to a custom NuGet feed
 
 > [!NOTE]
-> Your custom NuGet feed must implement the [NuGet Catalog resource][nuget-catalog].
+> Your custom NuGet feed must implement the [NuGet Catalog resource](https://learn.microsoft.com/nuget/api/catalog-resource).
 
 ```console
-dotnet bumper MyPackage --service-index https://corp.local/nuget/index.json
+dotnet wait-for-package MyPackage --service-index https://corp.local/nuget/index.json
 ```
 
 ### Options
@@ -134,7 +134,6 @@ This project is licensed under the [Apache 2.0][license] license.
 [dotnet-sdk]: https://dotnet.microsoft.com/download "Download the .NET SDK"
 [issues]: https://github.com/martincostello/wait-for-nuget-package/issues "Issues for this project on GitHub.com"
 [license]: https://www.apache.org/licenses/LICENSE-2.0.txt "The Apache 2.0 license"
-[nuget-catalog]: https://learn.microsoft.com/nuget/api/catalog-resource "NuGet Catalog resource"]
 <!--
 [package-badge]: https://buildstats.info/nuget/MartinCostello.WaitForNuGetPackage?includePreReleases=false
 [package-download]: https://www.nuget.org/packages/MartinCostello.WaitForNuGetPackage "Download MartinCostello.WaitForNuGetPackage from NuGet"
