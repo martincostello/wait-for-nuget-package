@@ -9,7 +9,7 @@
     <Summary>$(Description)</Summary>
     <TargetFramework>net8.0</TargetFramework>
     <Title>WaitForNuGetPackage</Title>
-    <ToolCommandName>wait-for-nuget-package</ToolCommandName>
+    <ToolCommandName>dotnet-wait-for-package</ToolCommandName>
     <UserSecretsId>MartinCostello.WaitForNuGetPackage</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
