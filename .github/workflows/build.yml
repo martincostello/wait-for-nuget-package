@@ -66,8 +66,6 @@ jobs:
 
     - uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4.4.1
       name: Upload coverage to Codecov
-      # TODO Enable when public and token configured
-      if: false
       with:
         file: ./artifacts/coverage/coverage.cobertura.xml
         flags: ${{ matrix.os-name }}
@@ -83,11 +81,10 @@ jobs:
 
     - name: Attest artifacts
       uses: actions/attest-build-provenance@173725a1209d09b31f9d30a3890cf2757ebbff0d # v1.1.2
-      # TODO Enable when public
-      if: false
-        #runner.os == 'Windows' &&
-        #github.event.repository.fork == false &&
-        #(github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
+      if: |
+        runner.os == 'Windows' &&
+        github.event.repository.fork == false &&
+        (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/tags/v'))
       with:
         subject-path: |
           ./artifacts/publish/WaitForNuGetPackage/release*/WaitForNuGetPackage*.dll

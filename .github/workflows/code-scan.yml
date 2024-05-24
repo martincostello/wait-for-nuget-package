@@ -19,8 +19,6 @@ permissions:
 jobs:
   code-ql:
     runs-on: ubuntu-latest
-    # TODO Enable when public
-    if: false
 
     permissions:
       security-events: write
