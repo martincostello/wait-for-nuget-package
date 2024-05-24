@@ -42,6 +42,7 @@ internal sealed class WaitCommand(
                 }
 
                 // TODO Wait for the package(s) to be indexed
+                // https://azuresearch-usnc.nuget.org/query?q=packageid:{NAME}&prerelease=true&semVerLevel=2.0.0
             });
 
         if (cancellationToken.IsCancellationRequested)
