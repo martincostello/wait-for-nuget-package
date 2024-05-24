@@ -193,6 +193,22 @@ jobs:
       with:
         name: packages-windows
 
+    - name: Get the NuGet package information
+      id: get-package-info
+      shell: pwsh
+      run: |
+        $packageNames = @()
+        $packageVersion = ""
+        Get-ChildItem -Filter "*.nupkg" | ForEach-Object {
+          $parts = $_.BaseName.Split(".")
+          $name = ($parts | Select-Object -SkipLast 3) -Join "."
+          $packageVersion = $parts[-3..-1] -Join "."
+          $packageNames += $name
+        }
+        $packageNames = $packageNames -Join ","
+        "package-names=${packageNames}" >> $env:GITHUB_OUTPUT
+        "package-version=${packageVersion}" >> $env:GITHUB_OUTPUT
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
       with:
@@ -204,3 +220,14 @@ jobs:
         API_KEY: ${{ secrets.NUGET_TOKEN }}
         SOURCE: https://api.nuget.org/v3/index.json
       run: dotnet nuget push "*.nupkg" --api-key "${API_KEY}" --skip-duplicate --source "${SOURCE}"
+
+    - name: Publish nuget_package_published
+      uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3.0.0
+      with:
+        event-type: nuget_package_published
+        token: ${{ secrets.COSTELLOBOT_TOKEN }}
+        client-payload: |-
+          {
+            "packages": "${{ steps.get-package-info.outputs.package-names }}",
+            "version": "${{ steps.get-package-info.outputs.package-version }}"
+          }
