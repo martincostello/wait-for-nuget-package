@@ -56,6 +56,10 @@ internal static class ServiceCollectionExtensions
             {
                 processorSettings.ServiceIndexUrl = serviceIndexUrl;
             }
+            else
+            {
+                waitSettings.ServiceIndexUrl = processorSettings.ServiceIndexUrl;
+            }
 
             if (waitSettings.Timeout is { } timeout)
             {

@@ -2,7 +2,9 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
+using NuGet.Protocol;
 using NuGet.Protocol.Catalog;
+using NuGet.Protocol.Core.Types;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -33,7 +35,7 @@ internal sealed class WaitCommand(
             .Status()
             .Spinner(Spinner.Known.Dots)
             .SpinnerStyle(Style.Parse("purple"))
-            .StartAsync("Watching NuGet packages...", async (_) => await WaitForPackagesAsync());
+            .StartAsync("Watching NuGet packages...", async (_) => await WaitForPackagesAsync(settings));
 
         stopwatch.Stop();
 
@@ -58,7 +60,7 @@ internal sealed class WaitCommand(
         return result;
     }
 
-    private async Task WaitForPackagesAsync()
+    private async Task WaitForPackagesAsync(WaitCommandSettings settings)
     {
         while (!cancellationTokenSource.Token.IsCancellationRequested && !packages.AllPublished)
         {
@@ -70,8 +72,50 @@ internal sealed class WaitCommand(
 
         if (packages.AllPublished)
         {
-            // TODO Wait for the package(s) to be indexed
-            // https://azuresearch-usnc.nuget.org/query?q=packageid:{NAME}&prerelease=true&semVerLevel=2.0.0
+            await Parallel.ForEachAsync(
+                packages.ObservedPackages,
+                async (package, _) => await SearchPackages(package.Id, package.Version, settings));
+        }
+    }
+
+    private async Task SearchPackages(
+        string packageId,
+        string packageVersion,
+        WaitCommandSettings settings)
+    {
+        var delay = TimeSpan.FromSeconds(10);
+        var repository = Repository.Factory.GetCoreV3(settings.ServiceIndexUrl);
+        var resource = await repository.GetResourceAsync<PackageSearchResource>();
+        var logger = NuGet.Common.NullLogger.Instance;
+
+        var searchTerm = $"packageid:{packageId}";
+        var filters = new SearchFilter(includePrerelease: true);
+        var skip = 0;
+        var take = 1;
+
+        var cancellationToken = cancellationTokenSource.Token;
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var results = await resource.SearchAsync(
+                searchTerm,
+                filters,
+                skip,
+                take,
+                logger,
+                cancellationToken);
+
+            foreach (var result in results)
+            {
+                if (string.Equals(result.Identity.Id, packageId, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(result.Identity.Version.ToNormalizedString(), packageVersion, StringComparison.OrdinalIgnoreCase) &&
+                    result.IsListed)
+                {
+                    return;
+                }
+            }
+
+            await Task.Delay(delay, cancellationToken);
         }
     }
 }
