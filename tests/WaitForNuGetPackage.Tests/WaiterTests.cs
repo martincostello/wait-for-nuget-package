@@ -8,11 +8,11 @@ namespace MartinCostello.WaitForNuGetPackage;
 public class WaiterTests(ITestOutputHelper output)
 {
     [Fact]
-    public async Task Application_Runs_With_No_Errors()
+    public async Task Application_Returns_Two_If_Cancelled()
     {
         // Arrange
         using var console = new TestConsole();
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
 
         try
         {
@@ -23,7 +23,7 @@ public class WaiterTests(ITestOutputHelper output)
                 cts.Token);
 
             // Assert
-            actual.ShouldBe(0);
+            actual.ShouldBe(2);
         }
         finally
         {

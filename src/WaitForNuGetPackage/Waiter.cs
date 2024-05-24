@@ -1,18 +1,26 @@
 ﻿// Copyright (c) Martin Costello, 2024. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System.Net.Http.Headers;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NuGet.Protocol.Catalog;
 using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace MartinCostello.WaitForNuGetPackage;
 
 /// <summary>
 /// Waits for a new version of a NuGet package to be published.
 /// </summary>
-public static class Waiter
+internal static class Waiter
 {
     //// See https://github.com/NuGet/Samples/blob/ec30a2b7c54c2d09e5a476444a2c7a8f2f289d49/CatalogReaderExample
+
+    public static readonly string Version = typeof(Waiter).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
+
+    private static readonly ProductInfoHeaderValue _userAgent = CreateUserAgent();
 
     /// <summary>
     /// Waits for a new version of one or more NuGet packages to be published as an asynchronous operation.
@@ -28,65 +36,81 @@ public static class Waiter
         IReadOnlyCollection<string> args,
         CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(args);
+        var services = new ServiceCollection();
 
-        using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Warning));
-        using var httpClient = new HttpClient();
+        services.AddSingleton<IAnsiConsole>(console);
+        services.AddSingleton(TimeProvider.System);
 
-        var jsonClient = new SimpleHttpClient(httpClient, loggerFactory.CreateLogger<SimpleHttpClient>());
-        var client = new CatalogClient(jsonClient, loggerFactory.CreateLogger<CatalogClient>());
-        var leafProcessor = new CatalogLeafProcessor(console, cancellationToken);
+        services.AddHttpClient()
+                .ConfigureHttpClientDefaults((builder) =>
+                {
+                    builder.ConfigureHttpClient((client) => client.DefaultRequestHeaders.UserAgent.Add(_userAgent));
+                    builder.AddStandardResilienceHandler();
+                });
 
-        var cursor = new InMemoryCursor();
+        services.AddHttpClient<ISimpleHttpClient, SimpleHttpClient>();
+        services.AddTransient<ICatalogClient, CatalogClient>();
+        services.AddTransient<ICatalogLeafProcessor, CatalogLeafProcessor>();
+        services.AddSingleton<ICursor, InMemoryCursor>();
+
+        services.AddSingleton<CatalogProcessor>();
+        services.AddSingleton<CatalogProcessorSettings>();
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        services.AddSingleton(cts);
+
+        // TODO Wire this up to DI nicely
         var settings = new CatalogProcessorSettings()
         {
             DefaultMinCommitTimestamp = DateTimeOffset.UtcNow.AddMinutes(-10),
             ExcludeRedundantLeaves = false,
         };
 
-        var processor = new CatalogProcessor(
-            cursor,
-            client,
-            leafProcessor,
-            settings,
-            loggerFactory.CreateLogger<CatalogProcessor>());
+        services.AddSingleton(settings);
 
-        // TODO Implement the logic:
-        // - Have a --timeout option to specify how long to wait for the package(s) to be published
-        // - Once all the packages have been found (optionally with a version), then need to wait for them to be indexed
-        while (!cancellationToken.IsCancellationRequested)
+        services.AddLogging((builder) =>
         {
-            if (!await processor.ProcessAsync())
+            var level =
+                args.Contains("--verbose", StringComparer.OrdinalIgnoreCase) ?
+                LogLevel.Debug :
+                LogLevel.Warning;
+
+            builder.AddConsole()
+                   .SetMinimumLevel(level);
+        });
+
+        var registrar = new TypeRegistrar(services);
+
+        var app = new CommandApp<WaitCommand>(registrar);
+
+        app.Configure((config) =>
+        {
+            config.AddExample(["MyCompany.MyProduct", "MyCompany.MyOtherProduct@1.2.3", "--timeout", "00:15:00"]);
+            config.ConfigureConsole(console);
+            config.SetInterceptor(new TimeoutInterceptor(cts));
+            config.UseAssemblyInformationalVersion();
+        });
+
+        return await app.RunAsync(args);
+    }
+
+    private static ProductInfoHeaderValue CreateUserAgent()
+    {
+        var productVersion = Version;
+
+        // Truncate the Git commit SHA to 7 characters, if present
+        int indexOfPlus = productVersion.IndexOf('+', StringComparison.Ordinal);
+
+        if (indexOfPlus > -1 && indexOfPlus < productVersion.Length - 1)
+        {
+            string hash = productVersion[(indexOfPlus + 1)..];
+
+            if (hash.Length > 7)
             {
-                break;
+                productVersion = productVersion[..(indexOfPlus + 8)];
             }
         }
 
-        return await Task.FromResult(0);
-    }
-
-    private sealed class CatalogLeafProcessor(IAnsiConsole console, CancellationToken cancellationToken) : ICatalogLeafProcessor
-    {
-        public Task<bool> ProcessPackageDeleteAsync(PackageDeleteCatalogLeaf leaf)
-            => Task.FromResult(!cancellationToken.IsCancellationRequested);
-
-        public Task<bool> ProcessPackageDetailsAsync(PackageDetailsCatalogLeaf leaf)
-        {
-            console.MarkupLine($"{leaf.CommitTimestamp:O}: [white on purple]{leaf.PackageId} {leaf.PackageVersion}[/]");
-            return Task.FromResult(!cancellationToken.IsCancellationRequested);
-        }
-    }
-
-    private sealed class InMemoryCursor : ICursor
-    {
-        public DateTimeOffset? Value { get; set; }
-
-        public Task<DateTimeOffset?> GetAsync() => Task.FromResult(Value);
-
-        public Task SetAsync(DateTimeOffset value)
-        {
-            Value = value;
-            return Task.CompletedTask;
-        }
+        return new ProductInfoHeaderValue("WaitForNuGetPackage", productVersion);
     }
 }
