@@ -19,8 +19,12 @@ internal static class ServiceCollectionExtensions
         IAnsiConsole console,
         CancellationTokenSource cancellationTokenSource)
     {
-        services.AddSingleton<IAnsiConsole>(console);
+        services.AddSingleton(cancellationTokenSource);
+        services.AddSingleton(console);
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<PackageWaitContext>();
+        services.AddSingleton<ICursor, InMemoryCursor>();
+
         services.AddHttpClient()
                 .ConfigureHttpClientDefaults((builder) =>
                 {
@@ -29,25 +33,32 @@ internal static class ServiceCollectionExtensions
                 });
 
         services.AddHttpClient<ISimpleHttpClient, SimpleHttpClient>();
+
         services.AddTransient<ICatalogClient, CatalogClient>();
         services.AddTransient<ICatalogLeafProcessor, CatalogLeafProcessor>();
-        services.AddSingleton<ICursor, InMemoryCursor>();
+        services.AddTransient<CatalogProcessor>();
+        services.AddTransient<CatalogProcessorSettings>();
 
-        services.AddSingleton<CatalogProcessor>();
-        services.AddSingleton<CatalogProcessorSettings>();
-        services.AddSingleton<PackageWaitContext>();
-
-        services.AddSingleton(cancellationTokenSource);
-
-        // TODO Wire this up to DI nicely
-        // TODO Allow the service index to be specified
-        var settings = new CatalogProcessorSettings()
+        services.AddSingleton((provider) =>
         {
-            DefaultMinCommitTimestamp = DateTimeOffset.UtcNow.AddMinutes(-10),
-            ExcludeRedundantLeaves = false,
-        };
+            var timeProvider = provider.GetRequiredService<TimeProvider>();
+            var utcNow = timeProvider.GetUtcNow();
 
-        services.AddSingleton(settings);
+            var processorSettings = new CatalogProcessorSettings()
+            {
+                DefaultMinCommitTimestamp = utcNow.AddMinutes(-1),
+                ExcludeRedundantLeaves = false,
+            };
+
+            var waitSettings = provider.GetRequiredService<WaitCommandSettings>();
+
+            if (waitSettings.Timeout is { } timeout)
+            {
+                processorSettings.MaxCommitTimestamp = utcNow.Add(timeout);
+            }
+
+            return processorSettings;
+        });
 
         services.AddLogging((builder) =>
         {
