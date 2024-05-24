@@ -5,13 +5,56 @@ namespace MartinCostello.WaitForNuGetPackage;
 
 public static class IntegrationTests
 {
-    [Fact(Skip = "Needs implementing.")]
-    public static async Task Application_Runs_With_No_Errors()
+    [Fact]
+    public static async Task Main_Returns_Minus_One_If_No_Arguments()
     {
         // Act
-        var actual = await Program.Main(["Polly"]);
+        var actual = await Program.Main([]);
 
         // Assert
-        actual.ShouldBe(0);
+        actual.ShouldBe(-1);
+    }
+
+    [Fact]
+    public static async Task Main_Returns_Minus_One_If_Invalid_Package()
+    {
+        // Act
+        var actual = await Program.Main(["Polly@"]);
+
+        // Assert
+        actual.ShouldBe(-1);
+    }
+
+    [Fact]
+    public static async Task Main_Returns_Minus_One_If_Invalid_Package_Version()
+    {
+        // Act
+        var actual = await Program.Main(["Polly@abc"]);
+
+        // Assert
+        actual.ShouldBe(-1);
+    }
+
+    [Theory]
+    [InlineData("foo")]
+    [InlineData("-00:00:01")]
+    [InlineData("00:00:00")]
+    public static async Task Main_Returns_Minus_One_If_Invalid_Timeout(string timeout)
+    {
+        // Act
+        var actual = await Program.Main(["Polly", "--timeout", timeout]);
+
+        // Assert
+        actual.ShouldBe(-1);
+    }
+
+    [Fact]
+    public static async Task Main_Returns_Two_If_Timeout()
+    {
+        // Act
+        var actual = await Program.Main(["Polly", "--timeout", "00:00:01"]);
+
+        // Assert
+        actual.ShouldBe(2);
     }
 }

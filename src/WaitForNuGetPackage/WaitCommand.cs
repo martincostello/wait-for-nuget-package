@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Martin Costello, 2024. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System.Diagnostics;
 using NuGet.Protocol.Catalog;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -14,6 +15,7 @@ namespace MartinCostello.WaitForNuGetPackage;
 internal sealed class WaitCommand(
     IAnsiConsole console,
     CatalogProcessor processor,
+    PackageWaitContext packages,
     CancellationTokenSource cancellationTokenSource) : AsyncCommand<WaitCommandSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings)
@@ -25,32 +27,48 @@ internal sealed class WaitCommand(
             console.WriteLine();
         }
 
-        var cancellationToken = cancellationTokenSource.Token;
+        var stopwatch = Stopwatch.StartNew();
 
         await console
             .Status()
             .Spinner(Spinner.Known.Dots)
             .SpinnerStyle(Style.Parse("purple"))
-            .StartAsync("Watching NuGet packages...", async (_) =>
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    if (!await processor.ProcessAsync())
-                    {
-                        break;
-                    }
-                }
+            .StartAsync("Watching NuGet packages...", async (_) => await WaitForPackagesAsync());
 
-                // TODO Wait for the package(s) to be indexed
-                // https://azuresearch-usnc.nuget.org/query?q=packageid:{NAME}&prerelease=true&semVerLevel=2.0.0
-            });
+        stopwatch.Stop();
 
-        if (cancellationToken.IsCancellationRequested)
+        if (cancellationTokenSource.Token.IsCancellationRequested)
         {
             console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
             return 2;
         }
+        else
+        {
+            var rounded = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
 
-        return 0;
+            var count = packages.ObservedPackages.Count;
+            var plural = count is 1 ? string.Empty : "s";
+
+            console.WriteLine();
+            console.MarkupLineInterpolated($"[{Color.Green}]{count} package{plural} published after {rounded}.[/]");
+            return 0;
+        }
+    }
+
+    private async Task WaitForPackagesAsync()
+    {
+        while (!cancellationTokenSource.Token.IsCancellationRequested && !packages.AllPublished)
+        {
+            if (!await processor.ProcessAsync())
+            {
+                break;
+            }
+        }
+
+        if (packages.AllPublished)
+        {
+            // TODO Wait for the package(s) to be indexed
+            // https://azuresearch-usnc.nuget.org/query?q=packageid:{NAME}&prerelease=true&semVerLevel=2.0.0
+        }
     }
 }

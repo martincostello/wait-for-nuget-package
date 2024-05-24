@@ -18,18 +18,25 @@ internal sealed record DesiredNuGetPackage(
             return false;
         }
 
-        if (!string.Equals(Id, other.PackageId, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        return Version is AnyVersion ||
-               string.Equals(Version, other.PackageVersion, StringComparison.OrdinalIgnoreCase);
+        return Equals((other.PackageId, other.PackageVersion));
     }
 
     public bool Equals(DesiredNuGetPackage? other)
     {
-        if (other is null || !string.Equals(Id, other.Id, StringComparison.OrdinalIgnoreCase))
+        if (other is null)
+        {
+            return false;
+        }
+
+        return Equals((other.Id, other.Version));
+    }
+
+    public override int GetHashCode()
+        => HashCode.Combine(Id, Version);
+
+    private bool Equals((string Id, string Version) other)
+    {
+        if (!string.Equals(Id, other.Id, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
@@ -41,7 +48,4 @@ internal sealed record DesiredNuGetPackage(
 
         return string.Equals(Version, other.Version, StringComparison.OrdinalIgnoreCase);
     }
-
-    public override int GetHashCode()
-        => HashCode.Combine(Id, Version);
 }

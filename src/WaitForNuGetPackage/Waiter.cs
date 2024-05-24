@@ -55,6 +55,7 @@ internal static class Waiter
 
         services.AddSingleton<CatalogProcessor>();
         services.AddSingleton<CatalogProcessorSettings>();
+        services.AddSingleton<PackageWaitContext>();
 
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         services.AddSingleton(cts);
@@ -77,6 +78,9 @@ internal static class Waiter
                 LogLevel.Warning;
 
             builder.AddConsole()
+                   .AddFilter("NuGet", LogLevel.Warning)
+                   .AddFilter("Polly", LogLevel.Error)
+                   .AddFilter("System.Net.Http.HttpClient", LogLevel.Warning)
                    .SetMinimumLevel(level);
         });
 
