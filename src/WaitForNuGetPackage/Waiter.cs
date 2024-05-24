@@ -40,8 +40,11 @@ internal static class Waiter
 
         app.Configure((config) =>
         {
+            config.AddExample(["MyCompany.MyProduct"]);
+            config.AddExample(["MyCompany.MyProduct@1.2.3"]);
             config.AddExample(["MyCompany.MyProduct", "MyCompany.MyOtherProduct@1.2.3", "--timeout", "00:15:00"]);
             config.ConfigureConsole(console);
+            config.SetApplicationName("dotnet wait-for-package");
             config.SetInterceptor(new TimeoutInterceptor(cts));
             config.UseAssemblyInformationalVersion();
         });

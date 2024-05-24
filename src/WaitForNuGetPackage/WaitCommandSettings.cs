@@ -23,8 +23,8 @@ internal sealed class WaitCommandSettings : CommandSettings
     /// <summary>
     /// Gets or sets the packages to wait on being published.
     /// </summary>
-    [CommandArgument(0, "[package]")]
-    [Description("The name(s), including an optional version, to wait for new versions to be published.")]
+    [CommandArgument(0, "[package-id]")]
+    [Description("The package ID(s), including an optional version, to wait for new versions to be published.")]
     public string[] Packages { get; set; } = [];
 
     /// <summary>
@@ -39,7 +39,7 @@ internal sealed class WaitCommandSettings : CommandSettings
     /// </summary>
     [CommandOption("-s|--since")]
     [DefaultValue("00:05:00")]
-    [Description("The period of time before now to include when searching for the published packages.")]
+    [Description("The period of time before now to include when searching for the published package(s).")]
     public TimeSpan? Since { get; set; }
 
     /// <summary>
