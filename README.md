@@ -1,4 +1,4 @@
-# WaitForNuGetPackage
+# WaitForNuGetPackage ⌛📦
 
 <!--
 [![NuGet][package-badge]][package-download]
