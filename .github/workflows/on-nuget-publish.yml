@@ -1,0 +1,43 @@
+name: on-nuget-publish
+
+on:
+  repository_dispatch:
+    types: [ nuget_package_published ]
+
+permissions: {}
+
+jobs:
+
+  wait-for-publish:
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 20
+
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
+
+    steps:
+
+      - name: Wait for NuGet packages to be published
+        shell: pwsh
+        env:
+          PACKAGE_NAMES: ${{ github.event.client_payload.packages }}
+          PACKAGE_VERSION: ${{ github.event.client_payload.version }}
+          PUBLISH_TIMEOUT: '00:15:00'
+        run: |
+          $packageNames = ${env:PACKAGE_NAMES} -Split ','
+          $packageVersion = ${env:PACKAGE_VERSION}.TrimStart('v')
+
+          $packages = @()
+
+          foreach ($packageName in $packageNames) {
+            $packages += "${packageName}@${packageVersion}"
+          }
+
+          dotnet tool install --global MartinCostello.WaitForNuGetPackage --add-source https://f.feedz.io/martincostello/wait-for-nuget-package/nuget/index.json
+          dotnet wait-for-package $packages --timeout ${env:PUBLISH_TIMEOUT}
+
+          if ($LASTEXITCODE -ne 0) {
+            Write-Output "::warning::Failed to wait for NuGet packages to be published and indexed."
+            exit 0
+          }
