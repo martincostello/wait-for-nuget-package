@@ -60,6 +60,7 @@ internal static class Waiter
         services.AddSingleton(cts);
 
         // TODO Wire this up to DI nicely
+        // TODO Allow the service index to be specified
         var settings = new CatalogProcessorSettings()
         {
             DefaultMinCommitTimestamp = DateTimeOffset.UtcNow.AddMinutes(-10),

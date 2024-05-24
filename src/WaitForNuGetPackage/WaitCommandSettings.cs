@@ -37,7 +37,7 @@ internal sealed class WaitCommandSettings : CommandSettings
     /// <summary>
     /// Gets or sets an optional value indicating whether to enable verbose logging.
     /// </summary>
-    [CommandOption("-v|--verbose")]
+    [CommandOption("--verbose")]
     [Description("Enables verbose logging.")]
     public bool? Verbose { get; set; }
 
@@ -58,7 +58,7 @@ internal sealed class WaitCommandSettings : CommandSettings
                 var version = package[(index + 1)..];
                 if (!NuGetVersion.TryParse(version, out _))
                 {
-                    return ValidationResult.Error($"The version '{version}' for the package '{package}' is not a valid NuGet package version.");
+                    return ValidationResult.Error($"The version '{version}' for the package '{package[0..index]}' is not a valid NuGet package version.");
                 }
             }
         }
