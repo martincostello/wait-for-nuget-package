@@ -13,8 +13,6 @@ permissions:
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
-    # TODO Enable when public
-    if: false
 
     steps:
 
