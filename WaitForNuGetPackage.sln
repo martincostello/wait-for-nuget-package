@@ -5,19 +5,85 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2E2CE965-66D5-4312-8F8B-6FD2D2BB1660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaitForNuGetPackage", "src\WaitForNuGetPackage\WaitForNuGetPackage.csproj", "{108F8C06-6DF8-4675-B5EF-B462D352BB58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaitForNuGetPackage", "src\WaitForNuGetPackage\WaitForNuGetPackage.csproj", "{108F8C06-6DF8-4675-B5EF-B462D352BB58}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{35250372-3A6D-44DC-B788-42430015F37C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaitForNuGetPackage.Tests", "tests\WaitForNuGetPackage.Tests\WaitForNuGetPackage.Tests.csproj", "{177830DD-FBC8-4B3E-8ACF-4B98D06BAA32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaitForNuGetPackage.Tests", "tests\WaitForNuGetPackage.Tests\WaitForNuGetPackage.Tests.csproj", "{177830DD-FBC8-4B3E-8ACF-4B98D06BAA32}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2B244257-2E91-4753-9122-75AF140FCC1B}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.vsconfig = .vsconfig
+		build.ps1 = build.ps1
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		exclusion.dic = exclusion.dic
+		global.json = global.json
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		omnisharp.json = omnisharp.json
+		package-readme.md = package-readme.md
+		README.md = README.md
+		SECURITY.MD = SECURITY.MD
+		startvs.cmd = startvs.cmd
+		startvscode.cmd = startvscode.cmd
+		stylecop.json = stylecop.json
+		WaitForNuGetPackage.ruleset = WaitForNuGetPackage.ruleset
+		WaitForNuGetPackage.snk = WaitForNuGetPackage.snk
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{85351CCC-FA6D-4DBD-A8E0-752EFDDB4023}"
+	ProjectSection(SolutionItems) = preProject
+		.vscode\extensions.json = .vscode\extensions.json
+		.vscode\launch.json = .vscode\launch.json
+		.vscode\settings.json = .vscode\settings.json
+		.vscode\tasks.json = .vscode\tasks.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{3231E07A-2969-4487-8AA4-08F90CB63EA4}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{3C433880-2AA3-42EC-862C-DAA7A72C7C15}"
+	ProjectSection(SolutionItems) = preProject
+		.github\actionlint-matcher.json = .github\actionlint-matcher.json
+		.github\CODEOWNERS = .github\CODEOWNERS
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\FUNDING.yml = .github\FUNDING.yml
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
+		.github\update-dotnet-sdk.json = .github\update-dotnet-sdk.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{55798B12-DBC9-4955-81BC-2CE7DD8C93D7}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\ISSUE_TEMPLATE\config.yml = .github\ISSUE_TEMPLATE\config.yml
+		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C3EB727D-0877-4D0C-8BC4-5DA082AC077D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\bump-version.yml = .github\workflows\bump-version.yml
+		.github\workflows\code-scan.yml = .github\workflows\code-scan.yml
+		.github\workflows\dependency-review.yml = .github\workflows\dependency-review.yml
+		.github\workflows\lint.yml = .github\workflows\lint.yml
+		.github\workflows\ossf-scorecard.yml = .github\workflows\ossf-scorecard.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{108F8C06-6DF8-4675-B5EF-B462D352BB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -29,8 +95,19 @@ Global
 		{177830DD-FBC8-4B3E-8ACF-4B98D06BAA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{177830DD-FBC8-4B3E-8ACF-4B98D06BAA32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{108F8C06-6DF8-4675-B5EF-B462D352BB58} = {2E2CE965-66D5-4312-8F8B-6FD2D2BB1660}
 		{177830DD-FBC8-4B3E-8ACF-4B98D06BAA32} = {35250372-3A6D-44DC-B788-42430015F37C}
+		{85351CCC-FA6D-4DBD-A8E0-752EFDDB4023} = {2B244257-2E91-4753-9122-75AF140FCC1B}
+		{3231E07A-2969-4487-8AA4-08F90CB63EA4} = {2B244257-2E91-4753-9122-75AF140FCC1B}
+		{3C433880-2AA3-42EC-862C-DAA7A72C7C15} = {2B244257-2E91-4753-9122-75AF140FCC1B}
+		{55798B12-DBC9-4955-81BC-2CE7DD8C93D7} = {3C433880-2AA3-42EC-862C-DAA7A72C7C15}
+		{C3EB727D-0877-4D0C-8BC4-5DA082AC077D} = {3C433880-2AA3-42EC-862C-DAA7A72C7C15}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6258C04-B08E-429B-8052-F0F4748293F6}
 	EndGlobalSection
 EndGlobal

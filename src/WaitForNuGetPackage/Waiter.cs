@@ -1,15 +1,22 @@
-// Copyright (c) Martin Costello, 2024. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2024. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace MartinCostello.WaitForNuGetPackage;
 
 /// <summary>
 /// Waits for a new version of a NuGet package to be published.
 /// </summary>
-public static class Waiter
+internal static class Waiter
 {
+    //// See https://github.com/NuGet/Samples/blob/ec30a2b7c54c2d09e5a476444a2c7a8f2f289d49/CatalogReaderExample
+
+    public static readonly string Version = typeof(Waiter).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
+
     /// <summary>
     /// Waits for a new version of one or more NuGet packages to be published as an asynchronous operation.
     /// </summary>
@@ -24,9 +31,24 @@ public static class Waiter
         IReadOnlyCollection<string> args,
         CancellationToken cancellationToken)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
-        console.WriteLine($"Arguments: [ {string.Join(", ", args)} ]");
-        return await Task.FromResult(0);
+        var services = new ServiceCollection().AddServices(args, console, cts);
+        var registrar = new TypeRegistrar(services);
+
+        var app = new CommandApp<WaitCommand>(registrar);
+
+        app.Configure((config) =>
+        {
+            config.AddExample(["MyCompany.MyProduct"]);
+            config.AddExample(["MyCompany.MyProduct@1.2.3"]);
+            config.AddExample(["MyCompany.MyProduct", "MyCompany.MyOtherProduct@1.2.3", "--timeout", "00:15:00"]);
+            config.ConfigureConsole(console);
+            config.SetApplicationName("dotnet wait-for-package");
+            config.SetInterceptor(new TimeoutInterceptor(cts));
+            config.UseAssemblyInformationalVersion();
+        });
+
+        return await app.RunAsync(args);
     }
 }
