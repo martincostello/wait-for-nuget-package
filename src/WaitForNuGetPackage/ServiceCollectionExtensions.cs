@@ -44,13 +44,13 @@ internal static class ServiceCollectionExtensions
             var timeProvider = provider.GetRequiredService<TimeProvider>();
             var utcNow = timeProvider.GetUtcNow();
 
+            var waitSettings = provider.GetRequiredService<WaitCommandSettings>();
+
             var processorSettings = new CatalogProcessorSettings()
             {
-                DefaultMinCommitTimestamp = utcNow.AddMinutes(-1),
+                DefaultMinCommitTimestamp = utcNow.Add(-(waitSettings.Since ?? TimeSpan.Zero)),
                 ExcludeRedundantLeaves = false,
             };
-
-            var waitSettings = provider.GetRequiredService<WaitCommandSettings>();
 
             if (waitSettings.ServiceIndexUrl is { } serviceIndexUrl)
             {

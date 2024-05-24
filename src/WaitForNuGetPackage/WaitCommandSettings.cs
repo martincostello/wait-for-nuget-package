@@ -35,6 +35,14 @@ internal sealed class WaitCommandSettings : CommandSettings
     public string? ServiceIndexUrl { get; set; }
 
     /// <summary>
+    /// Gets or sets the optional period of time before now to check for the package being published.
+    /// </summary>
+    [CommandOption("-s|--since")]
+    [DefaultValue("00:05:00")]
+    [Description("The period of time before now to include when searching for the published packages.")]
+    public TimeSpan? Since { get; set; }
+
+    /// <summary>
     /// Gets or sets the optional timeout to wait for the package(s) to be published.
     /// </summary>
     [CommandOption("-t|--timeout")]
@@ -74,6 +82,11 @@ internal sealed class WaitCommandSettings : CommandSettings
             !Uri.TryCreate(serviceIndexUrl, UriKind.Absolute, out _))
         {
             return ValidationResult.Error("The service index URL must be a valid absolute URL.");
+        }
+
+        if (Since is { } since && since < TimeSpan.Zero)
+        {
+            return ValidationResult.Error("The value of since cannot be in the future.");
         }
 
         if (Timeout is { } timeout && timeout <= TimeSpan.Zero)
