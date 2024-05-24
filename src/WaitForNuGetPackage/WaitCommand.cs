@@ -2,9 +2,6 @@
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System.Diagnostics;
-using NuGet.Protocol;
-using NuGet.Protocol.Catalog;
-using NuGet.Protocol.Core.Types;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -16,9 +13,8 @@ namespace MartinCostello.WaitForNuGetPackage;
 /// </summary>
 internal sealed class WaitCommand(
     IAnsiConsole console,
-    CatalogProcessor processor,
     PackageWaitContext packages,
-    TimeProvider timeProvider,
+    NuGetRepository repository,
     CancellationTokenSource cancellationTokenSource) : AsyncCommand<WaitCommandSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings)
@@ -74,119 +70,6 @@ internal sealed class WaitCommand(
         return result;
     }
 
-    private static async Task<bool> IsPackagePublishedAsync(
-        PackageSearchResource resource,
-        string packageId,
-        string packageVersion,
-        DateTimeOffset? publishedSince,
-        CancellationToken cancellationToken)
-    {
-        var searchTerm = $"packageid:{packageId}";
-        var filters = new SearchFilter(includePrerelease: true);
-        var skip = 0;
-        var take = 1;
-
-        var results = await resource.SearchAsync(
-            searchTerm,
-            filters,
-            skip,
-            take,
-            NuGet.Common.NullLogger.Instance,
-            cancellationToken);
-
-        foreach (var result in results)
-        {
-            if (string.Equals(result.Identity.Id, packageId, StringComparison.OrdinalIgnoreCase))
-            {
-                bool correctVersion =
-                    string.Equals(result.Identity.Version.ToNormalizedString(), packageVersion, StringComparison.OrdinalIgnoreCase) ||
-                    (packageVersion is DesiredNuGetPackage.AnyVersion && result.Published >= publishedSince);
-
-                if (correctVersion && result.IsListed)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     private async Task WaitForPackagesAsync(WaitCommandSettings settings)
-    {
-        DateTimeOffset utcNow = timeProvider.GetUtcNow();
-        DateTimeOffset publishedSince = utcNow.Add(-(settings.Since ?? TimeSpan.Zero));
-
-        if (await AllPackagesArePublishedAsync(settings, publishedSince))
-        {
-            // All the packages are already published.
-            return;
-        }
-
-        while (!cancellationTokenSource.Token.IsCancellationRequested && !packages.AllPublished)
-        {
-            if (!await processor.ProcessAsync())
-            {
-                break;
-            }
-        }
-
-        if (packages.AllPublished)
-        {
-            await Parallel.ForEachAsync(
-                packages.ObservedPackages,
-                async (package, _) => await WaitForIndexAsync(package.Id, package.Version, settings));
-        }
-    }
-
-    private async Task WaitForIndexAsync(
-        string packageId,
-        string packageVersion,
-        WaitCommandSettings settings)
-    {
-        var delay = TimeSpan.FromSeconds(10);
-        var repository = Repository.Factory.GetCoreV3(settings.ServiceIndexUrl);
-        var resource = await repository.GetResourceAsync<PackageSearchResource>();
-
-        var cancellationToken = cancellationTokenSource.Token;
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            if (await IsPackagePublishedAsync(resource, packageId, packageVersion, null, cancellationToken))
-            {
-                break;
-            }
-
-            await Task.Delay(delay, cancellationToken);
-        }
-    }
-
-    private async Task<bool> AllPackagesArePublishedAsync(
-        WaitCommandSettings settings,
-        DateTimeOffset publishedSince)
-    {
-        var repository = Repository.Factory.GetCoreV3(settings.ServiceIndexUrl);
-        var resource = await repository.GetResourceAsync<PackageSearchResource>();
-
-        bool result = true;
-
-        foreach (var package in packages.DesiredPackages)
-        {
-            if (await IsPackagePublishedAsync(
-                    resource,
-                    package.Id,
-                    package.Version,
-                    publishedSince,
-                    cancellationTokenSource.Token))
-            {
-                packages.MarkPublished(package.Id, package.Version);
-            }
-            else
-            {
-                result = false;
-            }
-        }
-
-        return result;
-    }
+        => await repository.WaitForPackagesAsync(packages, settings, cancellationTokenSource.Token);
 }

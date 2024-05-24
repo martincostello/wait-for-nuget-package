@@ -22,6 +22,7 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton(cancellationTokenSource);
         services.AddSingleton(console);
         services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<NuGetRepository>();
         services.AddSingleton<PackageWaitContext>();
         services.AddSingleton<ICursor, InMemoryCursor>();
 
