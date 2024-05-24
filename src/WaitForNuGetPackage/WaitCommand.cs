@@ -37,22 +37,25 @@ internal sealed class WaitCommand(
 
         stopwatch.Stop();
 
+        int result = 0;
+        Color color = packages.AllPublished ? Color.Green : Color.Yellow;
+
+        console.WriteLine();
+
         if (cancellationTokenSource.Token.IsCancellationRequested)
         {
             console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
-            return 2;
+            result = 2;
         }
-        else
-        {
-            var rounded = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
 
-            var count = packages.ObservedPackages.Count;
-            var plural = count is 1 ? string.Empty : "s";
+        var rounded = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
+        var count = packages.ObservedPackages.Count;
+        var plural = count is 1 ? string.Empty : "s";
 
-            console.WriteLine();
-            console.MarkupLineInterpolated($"[{Color.Green}]{count} package{plural} published after {rounded}.[/]");
-            return 0;
-        }
+        console.WriteLine();
+        console.MarkupLineInterpolated($"[{color}]{count} package{plural} published after {rounded}.[/]");
+
+        return result;
     }
 
     private async Task WaitForPackagesAsync()
