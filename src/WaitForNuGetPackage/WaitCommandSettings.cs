@@ -28,6 +28,13 @@ internal sealed class WaitCommandSettings : CommandSettings
     public string[] Packages { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the optional URL of the NuGet service index to use.
+    /// </summary>
+    [CommandOption("-i|--service-index")]
+    [Description("The NuGet service index URL to use.")]
+    public string? ServiceIndexUrl { get; set; }
+
+    /// <summary>
     /// Gets or sets the optional timeout to wait for the package(s) to be published.
     /// </summary>
     [CommandOption("-t|--timeout")]
@@ -61,6 +68,12 @@ internal sealed class WaitCommandSettings : CommandSettings
                     return ValidationResult.Error($"The version '{version}' for the package '{package[0..index]}' is not a valid NuGet package version.");
                 }
             }
+        }
+
+        if (ServiceIndexUrl is { } serviceIndexUrl &&
+            !Uri.TryCreate(serviceIndexUrl, UriKind.Absolute, out _))
+        {
+            return ValidationResult.Error("The service index URL must be a valid absolute URL.");
         }
 
         if (Timeout is { } timeout && timeout <= TimeSpan.Zero)

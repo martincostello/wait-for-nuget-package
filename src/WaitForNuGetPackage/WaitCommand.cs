@@ -48,12 +48,12 @@ internal sealed class WaitCommand(
             result = 2;
         }
 
-        var rounded = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
+        var elapsed = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
         var count = packages.ObservedPackages.Count;
         var plural = count is 1 ? string.Empty : "s";
 
         console.WriteLine();
-        console.MarkupLineInterpolated($"[{color}]{count} package{plural} published after {rounded}.[/]");
+        console.MarkupLineInterpolated($"[{color}]{count} package{plural} published after {elapsed}.[/]");
 
         return result;
     }

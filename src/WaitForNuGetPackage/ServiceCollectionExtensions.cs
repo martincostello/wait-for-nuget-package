@@ -52,6 +52,11 @@ internal static class ServiceCollectionExtensions
 
             var waitSettings = provider.GetRequiredService<WaitCommandSettings>();
 
+            if (waitSettings.ServiceIndexUrl is { } serviceIndexUrl)
+            {
+                processorSettings.ServiceIndexUrl = serviceIndexUrl;
+            }
+
             if (waitSettings.Timeout is { } timeout)
             {
                 processorSettings.MaxCommitTimestamp = utcNow.Add(timeout);
