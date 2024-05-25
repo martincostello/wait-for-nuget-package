@@ -221,13 +221,15 @@ jobs:
         SOURCE: https://api.nuget.org/v3/index.json
       run: dotnet nuget push "*.nupkg" --api-key "${API_KEY}" --skip-duplicate --source "${SOURCE}"
 
-    - name: Publish nuget_package_published
+    - name: Publish nuget_packages_published
       uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3.0.0
       with:
-        event-type: nuget_package_published
+        event-type: nuget_packages_published
+        repository: ${{ github.repository_owner }}/github-automation
         token: ${{ secrets.COSTELLOBOT_TOKEN }}
         client-payload: |-
           {
+            "repository": "${{ github.repository }}",
             "packages": "${{ steps.get-package-info.outputs.package-names }}",
             "version": "${{ steps.get-package-info.outputs.package-version }}"
           }
