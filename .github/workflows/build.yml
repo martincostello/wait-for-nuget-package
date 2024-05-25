@@ -33,6 +33,8 @@ jobs:
     outputs:
       dotnet-sdk-version: ${{ steps.setup-dotnet.outputs.dotnet-version }}
       dotnet-validate-version: ${{ steps.get-dotnet-validate-version.outputs.dotnet-validate-version }}
+      package-names: ${{ steps.build.outputs.package-names }}
+      package-version: ${{ steps.build.outputs.package-version }}
 
     permissions:
       attestations: write
@@ -61,6 +63,7 @@ jobs:
       id: setup-dotnet
 
     - name: Build, Test and Package
+      id: build
       shell: pwsh
       run: ./build.ps1
 
@@ -110,6 +113,8 @@ jobs:
       run: |
         $dotnetValidateVersion = (Get-Content "./.config/dotnet-tools.json" | Out-String | ConvertFrom-Json).tools.'dotnet-validate'.version
         "dotnet-validate-version=${dotnetValidateVersion}" >> $env:GITHUB_OUTPUT
+        # TODO Remove after testing
+        Write-Output "${{ steps.build.outputs.package-names }}@${{ steps.build.outputs.package-version }}"
 
   validate-packages:
     needs: build
@@ -193,22 +198,6 @@ jobs:
       with:
         name: packages-windows
 
-    - name: Get the NuGet package information
-      id: get-package-info
-      shell: pwsh
-      run: |
-        $packageNames = @()
-        $packageVersion = ""
-        Get-ChildItem -Filter "*.nupkg" | ForEach-Object {
-          $parts = $_.BaseName.Split(".")
-          $name = ($parts | Select-Object -SkipLast 3) -Join "."
-          $packageVersion = $parts[-3..-1] -Join "."
-          $packageNames += $name
-        }
-        $packageNames = $packageNames -Join ","
-        "package-names=${packageNames}" >> $env:GITHUB_OUTPUT
-        "package-version=${packageVersion}" >> $env:GITHUB_OUTPUT
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
       with:
@@ -230,6 +219,6 @@ jobs:
         client-payload: |-
           {
             "repository": "${{ github.repository }}",
-            "packages": "${{ steps.get-package-info.outputs.package-names }}",
-            "version": "${{ steps.get-package-info.outputs.package-version }}"
+            "packages": "${{ needs.build.outputs.package-names }}",
+            "version": "${{ needs.build.outputs.package-version }}"
           }
