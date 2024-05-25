@@ -1,8 +1,6 @@
 # WaitForNuGetPackage ⌛📦
 
-<!--
 [![NuGet][package-badge]][package-download]
--->
 
 [![Build status][build-badge]][build-status]
 [![codecov][coverage-badge]][coverage-report]
@@ -129,10 +127,8 @@ This project is licensed under the [Apache 2.0][license] license.
 [dotnet-sdk]: https://dotnet.microsoft.com/download "Download the .NET SDK"
 [issues]: https://github.com/martincostello/wait-for-nuget-package/issues "Issues for this project on GitHub.com"
 [license]: https://www.apache.org/licenses/LICENSE-2.0.txt "The Apache 2.0 license"
-<!--
 [package-badge]: https://buildstats.info/nuget/MartinCostello.WaitForNuGetPackage?includePreReleases=false
 [package-download]: https://www.nuget.org/packages/MartinCostello.WaitForNuGetPackage "Download MartinCostello.WaitForNuGetPackage from NuGet"
--->
 [repo]: https://github.com/martincostello/wait-for-nuget-package "This project on GitHub.com"
 [scorecard-badge]: https://api.securityscorecards.dev/projects/github.com/martincostello/wait-for-nuget-package/badge
 [scorecard-report]: https://securityscorecards.dev/viewer/?uri=github.com/martincostello/wait-for-nuget-package "OpenSSF Scorecard for this project"
