@@ -113,8 +113,6 @@ jobs:
       run: |
         $dotnetValidateVersion = (Get-Content "./.config/dotnet-tools.json" | Out-String | ConvertFrom-Json).tools.'dotnet-validate'.version
         "dotnet-validate-version=${dotnetValidateVersion}" >> $env:GITHUB_OUTPUT
-        # TODO Remove after testing
-        Write-Output "${{ steps.build.outputs.package-names }}@${{ steps.build.outputs.package-version }}"
 
   validate-packages:
     needs: build
