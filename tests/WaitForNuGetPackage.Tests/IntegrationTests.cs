@@ -5,11 +5,23 @@ namespace MartinCostello.WaitForNuGetPackage;
 
 public static class IntegrationTests
 {
-    [Fact]
-    public static async Task Main_Returns_Zero_If_Package_Published()
+    [Theory]
+    [InlineData("Polly@7.2.3")]
+    [InlineData("Polly@8.4.0")]
+    public static async Task Main_Returns_Zero_If_Package_Is_Published(string package)
     {
         // Act
-        var actual = await Program.Main(["Polly.Core@8.4.0"]);
+        var actual = await Program.Main([package]);
+
+        // Assert
+        actual.ShouldBe(0);
+    }
+
+    [Fact]
+    public static async Task Main_Returns_Zero_If_Packages_Are_Published()
+    {
+        // Act
+        var actual = await Program.Main(["Polly@8.0.0", "Polly.Core@8.0.0"]);
 
         // Assert
         actual.ShouldBe(0);
