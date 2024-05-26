@@ -16,8 +16,8 @@ Any feedback or issues for this package can be added to the issues in [GitHub][i
 
 This package is licensed under the [Apache 2.0][license] license.
 
-[build-badge]: https://github.com/martincostello/wait-for-nuget-package/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush
-[build-status]: https://github.com/martincostello/wait-for-nuget-package/actions/workflows/build.yml/badge.svg?branch=main&event=push "Continuous Integration for this project"
+[build-badge]: https://github.com/martincostello/wait-for-nuget-package/actions/workflows/build.yml/badge.svg?branch=main&event=push
+[build-status]: https://github.com/martincostello/wait-for-nuget-package/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush "Continuous Integration for this project"
 [coverage-badge]: https://codecov.io/gh/martincostello/wait-for-nuget-package/branch/main/graph/badge.svg
 [coverage-report]: https://codecov.io/gh/martincostello/wait-for-nuget-package "Code coverage report for this project"
 [issues]: https://github.com/martincostello/wait-for-nuget-package/issues "Issues for this project on GitHub.com"
