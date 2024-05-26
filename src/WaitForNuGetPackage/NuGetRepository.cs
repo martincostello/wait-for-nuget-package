@@ -74,6 +74,18 @@ internal sealed class NuGetRepository(
                 {
                     return true;
                 }
+
+                // By default only the latest version is returned, so need
+                // to fetch the rest if the queried version is not the latest.
+                var versions = await result.GetVersionsAsync();
+
+                foreach (var version in versions)
+                {
+                    if (string.Equals(version.Version.ToNormalizedString(), packageVersion, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
             }
         }
 
