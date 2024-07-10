@@ -28,5 +28,7 @@
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.0.0-preview.6.24353.1" />
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.0-preview.6.24327.7" />
+    <PackageVersion Update="System.Formats.Asn1" Version="9.0.0-preview.6.24327.7" />
+    <PackageVersion Update="System.Text.Json" Version="9.0.0-preview.6.24327.7" />
   </ItemGroup>
 </Project>
