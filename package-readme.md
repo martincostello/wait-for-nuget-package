@@ -22,5 +22,5 @@ This package is licensed under the [Apache 2.0][license] license.
 [coverage-report]: https://codecov.io/gh/martincostello/wait-for-nuget-package "Code coverage report for this project"
 [issues]: https://github.com/martincostello/wait-for-nuget-package/issues "Issues for this project on GitHub.com"
 [license]: https://www.apache.org/licenses/LICENSE-2.0.txt "The Apache 2.0 license"
-[package-badge]: https://buildstats.info/nuget/MartinCostello.WaitForNuGetPackage?includePreReleases=false
+[package-badge]: https://img.shields.io/nuget/v/MartinCostello.WaitForNuGetPackage?logo=nuget&label=NuGet&color=blue
 [package-download]: https://www.nuget.org/packages/MartinCostello.WaitForNuGetPackage "Download MartinCostello.WaitForNuGetPackage from NuGet"
