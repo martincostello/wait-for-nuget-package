@@ -30,37 +30,38 @@ dotnet wait-for-package MyPackage
 
 ### Examples
 
-> Wait for a new version of a package to be published
+#### Wait for a new version of a package to be published
 
 ```console
 dotnet wait-for-package MyPackage
 ```
 
-> Wait for a new version of a multiple packages to be published
+#### Wait for a new version of a multiple packages to be published
 
 ```console
 dotnet wait-for-package MyPackage.Core MyPackage.Data MyPackage.UI
 ```
 
-> Wait for a specific version of a package to be published
+#### Wait for a specific version of a package to be published
 
 ```console
 dotnet wait-for-package MyPackage@1.2.3
 ```
 
-> Wait no more than 15 minutes for a new version of a package to be published
+#### Wait no more than 15 minutes for a new version of a package to be published
 
 ```console
 dotnet wait-for-package MyPackage --timeout 00:15:00
 ```
 
-> Wait for any new version of a package to have be published within the last 30 minutes
+#### Wait for any new version of a package to have be published within the last 30 minutes
 
 ```console
 dotnet wait-for-package MyPackage --since 00:30:00
 ```
 
-> Wait for a new version of a package to be published to a custom NuGet feed
+#### Wait for a new version of a package to be published to a custom NuGet feed
+
 > [!NOTE]
 > Your custom NuGet feed must implement the [NuGet Catalog resource](https://learn.microsoft.com/nuget/api/catalog-resource).
 
