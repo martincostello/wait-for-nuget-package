@@ -61,7 +61,6 @@ dotnet wait-for-package MyPackage --since 00:30:00
 ```
 
 > Wait for a new version of a package to be published to a custom NuGet feed
-
 > [!NOTE]
 > Your custom NuGet feed must implement the [NuGet Catalog resource](https://learn.microsoft.com/nuget/api/catalog-resource).
 
