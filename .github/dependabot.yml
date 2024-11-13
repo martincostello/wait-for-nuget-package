@@ -27,3 +27,8 @@ updates:
   reviewers:
     - "martincostello"
   open-pull-requests-limit: 99
+  ignore:
+    - dependency-name: Microsoft.Extensions.Http.Resilience
+    - dependency-name: Microsoft.Extensions.Logging.Console
+    - dependency-name: System.Formats.Asn1
+    - dependency-name: System.Text.Json
