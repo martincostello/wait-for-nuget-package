@@ -7,8 +7,6 @@ param(
     [Parameter(Mandatory = $false)][switch] $SkipTests
 )
 
-echo "Test"
-
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 $ProgressPreference = "SilentlyContinue"
