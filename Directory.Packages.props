@@ -22,8 +22,8 @@
     <PackageVersion Include="System.Formats.Asn1" Version="8.0.1" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.1" />
-    <PackageVersion Include="xunit.v3" Version="1.0.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageVersion Include="xunit.v3" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.0.0" />
