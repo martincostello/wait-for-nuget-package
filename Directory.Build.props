@@ -11,6 +11,8 @@
     <AnalysisMode>All</AnalysisMode>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)WaitForNuGetPackage.snk</AssemblyOriginatorKeyFile>
     <Authors>martin_costello</Authors>
+    <!-- HACK Workaround for https://github.com/dotnet/sdk/issues/17454 -->
+    <BuildInParallel Condition="$([MSBuild]::IsOSPlatform('Windows'))">false</BuildInParallel>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <ChecksumAlgorithm>SHA256</ChecksumAlgorithm>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)WaitForNuGetPackage.ruleset</CodeAnalysisRuleSet>
