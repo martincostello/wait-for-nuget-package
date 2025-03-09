@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Tests for WaitForNuGetPackage.</Description>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA1707;CA2007;SA1600</NoWarn>
+    <NoWarn>$(NoWarn);CA1707;CA2007</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.WaitForNuGetPackage</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
@@ -26,15 +24,8 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="xunit.v3" />
   </ItemGroup>
-  <ItemGroup>
-    <Using Include="Shouldly" />
-    <Using Include="Xunit" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">
+  <PropertyGroup>
     <CollectCoverage>true</CollectCoverage>
-    <CoverletOutputFormat>cobertura,json</CoverletOutputFormat>
-    <Exclude>[*.Test*]*,[xunit.*]*</Exclude>
-    <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
     <Threshold>80</Threshold>
   </PropertyGroup>
 </Project>
