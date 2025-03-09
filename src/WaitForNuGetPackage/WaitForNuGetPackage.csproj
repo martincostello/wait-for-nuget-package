@@ -6,7 +6,6 @@
     <PackAsTool>true</PackAsTool>
     <PackageId>MartinCostello.WaitForNuGetPackage</PackageId>
     <RootNamespace>MartinCostello.WaitForNuGetPackage</RootNamespace>
-    <Summary>$(Description)</Summary>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Title>WaitForNuGetPackage</Title>
     <ToolCommandName>dotnet-wait-for-package</ToolCommandName>
