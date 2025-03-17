@@ -1,15 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Tests for WaitForNuGetPackage.</Description>
-    <NoWarn>$(NoWarn);CA1707;CA2007</NoWarn>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.WaitForNuGetPackage</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
     <UserSecretsId>MartinCostello.WaitForNuGetPackage</UserSecretsId>
+    <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\WaitForNuGetPackage\WaitForNuGetPackage.csproj" />
   </ItemGroup>
