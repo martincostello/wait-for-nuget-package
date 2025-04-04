@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
     <AssemblyIsCLSCompliant>false</AssemblyIsCLSCompliant>
+    <!-- HACK Workaround for https://github.com/dotnet/sdk/issues/17454 -->
+    <BuildInParallel Condition="$([MSBuild]::IsOSPlatform('Windows'))">false</BuildInParallel>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)WaitForNuGetPackage.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
