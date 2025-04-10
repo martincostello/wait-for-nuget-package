@@ -34,8 +34,8 @@
     <PackageVersion Update="System.Text.Json" Version="9.0.8" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.0-preview.2.25163.2" />
-    <PackageVersion Update="System.Formats.Asn1" Version="10.0.0-preview.2.25163.2" />
-    <PackageVersion Update="System.Text.Json" Version="10.0.0-preview.2.25163.2" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.0-preview.3.25171.5" />
+    <PackageVersion Update="System.Formats.Asn1" Version="10.0.0-preview.3.25171.5" />
+    <PackageVersion Update="System.Text.Json" Version="10.0.0-preview.3.25171.5" />
   </ItemGroup>
 </Project>
