@@ -80,16 +80,16 @@ function DotNetPack {
 }
 
 function DotNetTest {
-    param([string]$Project)
+    param()
 
     $additionalArgs = @()
 
-    if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
-        $additionalArgs += "--logger"
-        $additionalArgs += "GitHubActions;report-warnings=false"
+    if (-Not [string]::IsNullOrEmpty($env:GITHUB_SHA)) {
+        $additionalArgs += "--logger:GitHubActions;report-warnings=false"
+        $additionalArgs += "--logger:junit;LogFilePath=junit.xml"
     }
 
-    & $dotnet test $Project --configuration "Release" $additionalArgs
+    & $dotnet test --configuration "Release" $additionalArgs
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet test failed with exit code ${LASTEXITCODE}"
@@ -100,18 +100,12 @@ $packageProjects = @(
     (Join-Path $solutionPath "src" "WaitForNuGetPackage" "WaitForNuGetPackage.csproj")
 )
 
-$testProjects = @(
-    (Join-Path $solutionPath "tests" "WaitForNuGetPackage.Tests" "WaitForNuGetPackage.Tests.csproj")
-)
-
 Write-Information "Packaging libraries..."
 ForEach ($project in $packageProjects) {
     DotNetPack $project $Configuration
 }
 
-if ($SkipTests -eq $false) {
-    Write-Information "Testing $($testProjects.Count) project(s)..."
-    ForEach ($project in $testProjects) {
-        DotNetTest $project
-    }
+if (-Not $SkipTests) {
+    Write-Information "Testing solution..."
+    DotNetTest
 }
