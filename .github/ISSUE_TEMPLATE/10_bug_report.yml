@@ -12,8 +12,8 @@ body:
 - type: input
   attributes:
     label: Version
-    description: Which version of the library are you experiencing the issue with?
-    placeholder: 1.0.0
+    description: Which version of the tool are you experiencing the issue with?
+    placeholder: 1.1.0
   validations:
     required: true
 - type: textarea
