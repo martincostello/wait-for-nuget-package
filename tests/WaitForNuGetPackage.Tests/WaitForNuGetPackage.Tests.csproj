@@ -3,7 +3,7 @@
     <Description>Tests for WaitForNuGetPackage.</Description>
     <OutputType>Exe</OutputType>
     <RootNamespace>MartinCostello.WaitForNuGetPackage</RootNamespace>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>MartinCostello.WaitForNuGetPackage</UserSecretsId>
     <UseDefaultCodeAnalysisRuleSet>true</UseDefaultCodeAnalysisRuleSet>
   </PropertyGroup>
