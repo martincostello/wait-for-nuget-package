@@ -1,36 +1,7 @@
 version: 2
 updates:
-- package-ecosystem: "docker"
-  directory: ".devcontainer"
-  schedule:
-    interval: daily
-    time: "05:30"
-    timezone: Europe/London
-- package-ecosystem: "github-actions"
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "05:30"
-    timezone: Europe/London
 - package-ecosystem: nuget
   directory: "/"
-  groups:
-    Microsoft.Extensions:
-      patterns:
-        - Microsoft.Extensions.*
-    Spectre.Console:
-      patterns:
-        - Spectre.Console*
-    xunit:
-      patterns:
-        - xunit*
   schedule:
-    interval: daily
-    time: "05:30"
+    interval: yearly
     timezone: Europe/London
-  open-pull-requests-limit: 99
-  ignore:
-    - dependency-name: Microsoft.Extensions.Http.Resilience
-    - dependency-name: Microsoft.Extensions.Logging.Console
-    - dependency-name: System.Formats.Asn1
-    - dependency-name: System.Text.Json
