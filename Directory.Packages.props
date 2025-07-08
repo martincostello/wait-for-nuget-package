@@ -22,15 +22,15 @@
     <PackageVersion Include="Spectre.Console.Cli" Version="0.50.0" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.50.0" />
     <PackageVersion Include="System.Formats.Asn1" Version="8.0.2" />
-    <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.6" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.7" />
+    <PackageVersion Include="System.Text.Json" Version="8.0.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
     <PackageVersion Include="xunit.v3" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.6.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.6" />
-    <PackageVersion Update="System.Formats.Asn1" Version="9.0.6" />
-    <PackageVersion Update="System.Text.Json" Version="9.0.6" />
+    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.7.0" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
+    <PackageVersion Update="System.Formats.Asn1" Version="9.0.7" />
+    <PackageVersion Update="System.Text.Json" Version="9.0.7" />
   </ItemGroup>
 </Project>
