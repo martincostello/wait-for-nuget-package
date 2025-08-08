@@ -9,7 +9,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <PackageTags>nuget,tool</PackageTags>
     <UseArtifactsOutput>true</UseArtifactsOutput>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <VersionPrefix>1.1.2</VersionPrefix>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(EnableReferenceTrimmer)' != 'false' and '$(GenerateDocumentationFile)' != 'true' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
