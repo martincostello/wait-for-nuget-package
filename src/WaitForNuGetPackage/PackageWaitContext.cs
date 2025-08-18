@@ -51,9 +51,12 @@ internal sealed class PackageWaitContext
             var packageNameColor = found ? Color.Lime : Color.Grey;
             var packageVersionColor = found ? Color.Aqua : Color.Grey;
 
+            // Ideally the package URL would come from the item so that we can be sure it points to the right registry
+            var packageUrl = $"https://www.nuget.org/packages/{item.PackageId}/{item.PackageVersion}";
+
             var timestamp = $"[{item.CommitTimestamp:u}]";
             _console.MarkupLineInterpolated(
-                $"[{textColor}]{timestamp} {Emoji.Known.Package} Package [{packageNameColor}]{item.PackageId}[/]@[{packageVersionColor}]{item.PackageVersion}[/] was published.[/]");
+                $"[{textColor}]{timestamp} {Emoji.Known.Package} Package [link={packageUrl}][{packageNameColor}]{item.PackageId}[/]@[{packageVersionColor}]{item.PackageVersion}[/][/] was published.[/]");
         }
 
         return found;
