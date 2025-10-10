@@ -63,10 +63,10 @@ else {
     ${env:DOTNET_INSTALL_DIR} = Split-Path -Path (Get-Command dotnet).Path
 }
 
-$dotnet = Join-Path $env:DOTNET_INSTALL_DIR "dotnet"
+$dotnet = Join-Path ${env:DOTNET_INSTALL_DIR} "dotnet"
 
 if ($installDotNetSdk -eq $true) {
-    $env:PATH = "${env:DOTNET_INSTALL_DIR};${env:PATH}"
+    ${env:PATH} = "${env:DOTNET_INSTALL_DIR};${env:PATH}"
 }
 
 function DotNetPack {
@@ -84,7 +84,7 @@ function DotNetTest {
 
     $additionalArgs = @()
 
-    if (-Not [string]::IsNullOrEmpty($env:GITHUB_SHA)) {
+    if (-Not [string]::IsNullOrEmpty(${env:GITHUB_SHA})) {
         $additionalArgs += "--logger:GitHubActions;report-warnings=false"
         $additionalArgs += "--logger:junit;LogFilePath=junit.xml"
     }
