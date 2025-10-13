@@ -22,6 +22,9 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="xunit.v3" />
   </ItemGroup>
+  <ItemGroup>
+    <CoverletExclude Include="$([MSBuild]::Escape('[Spectre.Console*]*'))" />
+  </ItemGroup>
   <PropertyGroup>
     <CollectCoverage>true</CollectCoverage>
     <Threshold>80</Threshold>
