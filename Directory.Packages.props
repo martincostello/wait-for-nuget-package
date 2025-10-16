@@ -28,7 +28,7 @@
     <PackageVersion Include="xunit.v3" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
+    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.10" />
     <PackageVersion Update="System.Formats.Asn1" Version="9.0.10" />
     <PackageVersion Update="System.Text.Json" Version="9.0.10" />
