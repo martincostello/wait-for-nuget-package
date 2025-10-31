@@ -38,38 +38,51 @@ internal sealed class WaitCommand(
 
         console.Write(table);
 
+        int result = 0;
+
         using var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token, cancellationToken);
 
-        var stopwatch = Stopwatch.StartNew();
-
-        await console
-            .Status()
-            .Spinner(Spinner.Known.Dots)
-            .SpinnerStyle(Style.Parse("purple"))
-            .StartAsync("Waiting for NuGet packages...", async (_) => await WaitForPackagesAsync(settings, combined.Token));
-
-        stopwatch.Stop();
-
-        int result = 0;
-        Color color = packages.AllPublished ? Color.Green : Color.Yellow;
-
-        console.WriteLine();
-
-        if (combined.Token.IsCancellationRequested)
+        try
         {
-            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
+            var stopwatch = Stopwatch.StartNew();
+
+            await console
+                .Status()
+                .Spinner(Spinner.Known.Dots)
+                .SpinnerStyle(Style.Parse("purple"))
+                .StartAsync("Waiting for NuGet packages...", async (_) => await WaitForPackagesAsync(settings, combined.Token));
+
+            stopwatch.Stop();
+
+            Color color = packages.AllPublished ? Color.Green : Color.Yellow;
+
             console.WriteLine();
 
+            if (combined.Token.IsCancellationRequested)
+            {
+                EmitTimeoutWarning(console);
+                result = 2;
+            }
+
+            var elapsed = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
+            var count = packages.ObservedPackages.Count;
+            var plural = count is 1 ? string.Empty : "s";
+
+            console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
+        }
+        catch (OperationCanceledException)
+        {
+            EmitTimeoutWarning(console);
             result = 2;
         }
 
-        var elapsed = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
-        var count = packages.ObservedPackages.Count;
-        var plural = count is 1 ? string.Empty : "s";
-
-        console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
-
         return result;
+
+        static void EmitTimeoutWarning(IAnsiConsole console)
+        {
+            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
+            console.WriteLine();
+        }
     }
 
     private async Task WaitForPackagesAsync(WaitCommandSettings settings, CancellationToken cancellationToken)
