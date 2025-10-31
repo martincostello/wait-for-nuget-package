@@ -49,6 +49,6 @@ internal static class Waiter
             config.UseAssemblyInformationalVersion();
         });
 
-        return await app.RunAsync(args);
+        return await app.RunAsync(args, cancellationToken);
     }
 }
