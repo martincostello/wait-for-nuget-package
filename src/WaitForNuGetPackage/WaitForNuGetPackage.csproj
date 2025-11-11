@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>A .NET Global Tool that waits for a new version of a NuGet package to be published.</Description>
+    <IsAotCompatible>false</IsAotCompatible>
     <IsPackable>true</IsPackable>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
