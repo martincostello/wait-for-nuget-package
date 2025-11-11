@@ -11,27 +11,27 @@
     <PackageVersion Include="JustEat.HttpClientInterception" Version="5.1.2" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="NuGet.Protocol" Version="6.14.0" />
     <PackageVersion Include="NuGet.Protocol.Catalog" Version="4.3.1-main-9302537" />
     <PackageVersion Include="Polly.Extensions" Version="8.6.4" />
-    <PackageVersion Include="ReportGenerator" Version="5.4.17" />
+    <PackageVersion Include="ReportGenerator" Version="5.4.18" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="Spectre.Console" Version="0.52.0" />
-    <PackageVersion Include="Spectre.Console.Cli" Version="0.52.0" />
-    <PackageVersion Include="Spectre.Console.Testing" Version="0.52.0" />
+    <PackageVersion Include="Spectre.Console" Version="0.53.0" />
+    <PackageVersion Include="Spectre.Console.Cli" Version="0.53.0" />
+    <PackageVersion Include="Spectre.Console.Testing" Version="0.53.0" />
     <PackageVersion Include="System.Formats.Asn1" Version="8.0.2" />
-    <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.9" />
+    <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.10" />
     <PackageVersion Include="System.Text.Json" Version="8.0.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-    <PackageVersion Include="xunit.v3" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3" Version="3.2.0" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.9.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
-    <PackageVersion Update="System.Formats.Asn1" Version="9.0.9" />
-    <PackageVersion Update="System.Text.Json" Version="9.0.9" />
+    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.10" />
+    <PackageVersion Update="System.Formats.Asn1" Version="9.0.10" />
+    <PackageVersion Update="System.Text.Json" Version="9.0.10" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.0" />

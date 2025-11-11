@@ -17,7 +17,7 @@ internal sealed class WaitCommand(
     NuGetRepository repository,
     CancellationTokenSource cancellationTokenSource) : AsyncCommand<WaitCommandSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings, CancellationToken cancellationToken)
     {
         if (settings.NoLogo is not true)
         {
@@ -44,38 +44,53 @@ internal sealed class WaitCommand(
 
         console.Write(table);
 
-        var stopwatch = Stopwatch.StartNew();
-
-        await console
-            .Status()
-            .Spinner(Spinner.Known.Dots)
-            .SpinnerStyle(Style.Parse("purple"))
-            .StartAsync("Waiting for NuGet packages...", async (_) => await WaitForPackagesAsync(settings));
-
-        stopwatch.Stop();
-
         int result = 0;
-        Color color = packages.AllPublished ? Color.Green : Color.Yellow;
 
-        console.WriteLine();
+        using var combined = CancellationTokenSource.CreateLinkedTokenSource(cancellationTokenSource.Token, cancellationToken);
 
-        if (cancellationTokenSource.Token.IsCancellationRequested)
+        try
         {
-            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
+            var stopwatch = Stopwatch.StartNew();
+
+            await console
+                .Status()
+                .Spinner(Spinner.Known.Dots)
+                .SpinnerStyle(Style.Parse("purple"))
+                .StartAsync("Waiting for NuGet packages...", async (_) => await WaitForPackagesAsync(settings, combined.Token));
+
+            stopwatch.Stop();
+
+            Color color = packages.AllPublished ? Color.Green : Color.Yellow;
+
             console.WriteLine();
 
+            if (combined.Token.IsCancellationRequested)
+            {
+                EmitTimeoutWarning(console);
+                result = 2;
+            }
+
+            var elapsed = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
+            var count = packages.ObservedPackages.Count;
+            var plural = count is 1 ? string.Empty : "s";
+
+            console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
+        }
+        catch (OperationCanceledException)
+        {
+            EmitTimeoutWarning(console);
             result = 2;
         }
 
-        var elapsed = new TimeSpan(TimeSpan.TicksPerSecond * (stopwatch.Elapsed.Ticks / TimeSpan.TicksPerSecond));
-        var count = packages.ObservedPackages.Count;
-        var plural = count is 1 ? string.Empty : "s";
-
-        console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
-
         return result;
+
+        static void EmitTimeoutWarning(IAnsiConsole console)
+        {
+            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
+            console.WriteLine();
+        }
     }
 
-    private async Task WaitForPackagesAsync(WaitCommandSettings settings)
-        => await repository.WaitForPackagesAsync(packages, settings, cancellationTokenSource.Token);
+    private async Task WaitForPackagesAsync(WaitCommandSettings settings, CancellationToken cancellationToken)
+        => await repository.WaitForPackagesAsync(packages, settings, cancellationToken);
 }
