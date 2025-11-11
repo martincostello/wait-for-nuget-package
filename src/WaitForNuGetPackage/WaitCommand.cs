@@ -31,7 +31,13 @@ internal sealed class WaitCommand(
         table.AddColumn("[bold]Package ID[/]");
         table.AddColumn(new TableColumn("[bold]Package Version[/]").RightAligned());
 
-        foreach (var package in packages.DesiredPackages.OrderBy((p) => p.Id))
+#if NET10_0_OR_GREATER
+        var comparer = StringComparer.Create(CultureInfo.InvariantCulture, CompareOptions.IgnoreCase | CompareOptions.NumericOrdering);
+#else
+        var comparer = StringComparer.OrdinalIgnoreCase;
+#endif
+
+        foreach (var package in packages.DesiredPackages.OrderBy((p) => p.Id, comparer).ThenBy((p) => p.Version, comparer))
         {
             table.AddRow(package.Id, package.Version);
         }
