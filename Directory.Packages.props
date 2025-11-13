@@ -19,7 +19,8 @@
     <PackageVersion Include="ReportGenerator" Version="5.5.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Spectre.Console" Version="0.54.0" />
-    <PackageVersion Include="Spectre.Console.Cli" Version="0.53.0" />
+    <PackageVersion Include="Spectre.Console.Cli" Version="1.0.0-alpha.0.6" />
+    <PackageVersion Include="Spectre.Console.Cli.Testing" Version="1.0.0-alpha.0.6" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.54.0" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.11" />
     <PackageVersion Include="System.Text.Json" Version="8.0.6" />
