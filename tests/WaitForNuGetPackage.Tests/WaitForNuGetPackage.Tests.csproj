@@ -21,7 +21,7 @@
     <PackageReference Include="Spectre.Console.Testing" />
     <PackageReference Include="Spectre.Console.Cli.Testing" />
     <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.v3.mtp-off" />
   </ItemGroup>
   <ItemGroup>
     <CoverletExclude Include="$([MSBuild]::Escape('[Spectre.Console*]*'))" />
