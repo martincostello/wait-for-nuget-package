@@ -28,6 +28,6 @@
   </ItemGroup>
   <PropertyGroup>
     <CollectCoverage>true</CollectCoverage>
-    <Threshold>80</Threshold>
+    <Threshold>85,78,90</Threshold>
   </PropertyGroup>
 </Project>
