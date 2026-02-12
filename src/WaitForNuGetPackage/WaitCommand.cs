@@ -39,7 +39,14 @@ internal sealed class WaitCommand(
 
         foreach (var package in packages.DesiredPackages.OrderBy((p) => p.Id, comparer).ThenBy((p) => p.Version, comparer))
         {
-            table.AddRow($"[link=https://www.nuget.org/packages/{package.Id}]{package.Id}[/]", package.Version);
+            if (AnsiConsole.Profile.Capabilities.Links)
+            {
+                table.AddRow($"[link=https://www.nuget.org/packages/{package.Id}]{package.Id}[/]", package.Version);
+            }
+            else
+            {
+                table.AddRow(package.Id, package.Version);
+            }
         }
 
         console.Write(table);
