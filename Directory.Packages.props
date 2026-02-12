@@ -27,13 +27,18 @@
     <PackageVersion Include="xunit.v3.mtp-off" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="10.3.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.13" />
     <PackageVersion Update="System.Text.Json" Version="9.0.13" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.3" />
     <PackageVersion Update="System.Formats.Asn1" Version="10.0.3" />
     <PackageVersion Update="System.Text.Json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net11.0')) ">
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="System.Formats.Asn1" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="System.Text.Json" Version="11.0.0-preview.1.26104.118" />
   </ItemGroup>
 </Project>
