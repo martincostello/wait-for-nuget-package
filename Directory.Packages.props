@@ -10,7 +10,7 @@
     <PackageVersion Include="JunitXml.TestLogger" Version="8.0.0" />
     <PackageVersion Include="JustEat.HttpClientInterception" Version="5.1.2" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.5.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.1.26104.118" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="NuGet.Packaging" Version="7.3.1" />
@@ -36,5 +36,10 @@
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.6" />
     <PackageVersion Update="System.Formats.Asn1" Version="10.0.6" />
     <PackageVersion Update="System.Text.Json" Version="10.0.6" />
+  </ItemGroup>
+  <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net11.0')) ">
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="System.Formats.Asn1" Version="11.0.0-preview.1.26104.118" />
+    <PackageVersion Update="System.Text.Json" Version="11.0.0-preview.1.26104.118" />
   </ItemGroup>
 </Project>
