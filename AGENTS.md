@@ -4,10 +4,10 @@ This file provides guidance to coding agents when working with code in this repo
 
 ## Build and test commands
 
-- Preferred full validation command: `pwsh -File ./build.ps1`
-  - This is the repository's canonical local/CI entry point from `README.md`, `.github/CONTRIBUTING.md`, and `.github/workflows/build.yml`.
+- Preferred full validation command: `./build.ps1`
+  - The `build.ps1` script is the repository's canonical local/CI entry point referenced from `README.md`, `.github/CONTRIBUTING.md`, and `.github/workflows/build.yml`. You can also invoke it explicitly via `pwsh -File ./build.ps1`.
   - It bootstraps the exact SDK from `global.json` if needed, packs `src/WaitForNuGetPackage/WaitForNuGetPackage.csproj`, and runs the test suite unless `-SkipTests` is passed.
-- Build/package without tests: `pwsh -File ./build.ps1 -SkipTests`
+- Build/package without tests: `./build.ps1 -SkipTests` (or `pwsh -File ./build.ps1 -SkipTests`)
 - Run the full test project directly: `dotnet test ./tests/WaitForNuGetPackage.Tests/WaitForNuGetPackage.Tests.csproj --configuration Release`
 - Run a single test: `dotnet test ./tests/WaitForNuGetPackage.Tests/WaitForNuGetPackage.Tests.csproj --configuration Release --filter "FullyQualifiedName~DesiredNuGetPackageTests.Equals_Returns_True_For_Self" -p:CollectCoverage=false`
   - The test project enables coverlet thresholds by default, so filtered runs should disable coverage collection or they can fail even when the selected test passes.
