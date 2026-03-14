@@ -5,7 +5,7 @@ This file provides guidance to coding agents when working with code in this repo
 ## Build and test commands
 
 - Preferred full validation command: `pwsh -File .\build.ps1`
-  - This is the repository's canonical local/CI entry point from `README.md`, `.github/CONTRIBUTING.md`, and `.github\workflows\build.yml`.
+  - This is the repository's canonical local/CI entry point from `README.md`, `.github/CONTRIBUTING.md`, and `.github/workflows/build.yml`.
   - It bootstraps the exact SDK from `global.json` if needed, packs `src\WaitForNuGetPackage\WaitForNuGetPackage.csproj`, and runs the test suite unless `-SkipTests` is passed.
 - Build/package without tests: `pwsh -File .\build.ps1 -SkipTests`
 - Run the full test project directly: `dotnet test .\tests\WaitForNuGetPackage.Tests\WaitForNuGetPackage.Tests.csproj --configuration Release`
