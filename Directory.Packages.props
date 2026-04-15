@@ -9,7 +9,7 @@
     <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.3" />
     <PackageVersion Include="JunitXml.TestLogger" Version="8.0.0" />
     <PackageVersion Include="JustEat.HttpClientInterception" Version="5.1.2" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.4.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.5.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
@@ -29,12 +29,12 @@
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.14" />
-    <PackageVersion Update="System.Text.Json" Version="9.0.14" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.15" />
+    <PackageVersion Update="System.Text.Json" Version="9.0.15" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.5" />
-    <PackageVersion Update="System.Formats.Asn1" Version="10.0.5" />
-    <PackageVersion Update="System.Text.Json" Version="10.0.5" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.6" />
+    <PackageVersion Update="System.Formats.Asn1" Version="10.0.6" />
+    <PackageVersion Update="System.Text.Json" Version="10.0.6" />
   </ItemGroup>
 </Project>
