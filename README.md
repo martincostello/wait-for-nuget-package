@@ -48,6 +48,18 @@ dotnet wait-for-package MyPackage.Core MyPackage.Data MyPackage.UI
 dotnet wait-for-package MyPackage@1.2.3
 ```
 
+#### Wait for all NuGet packages found in the specified directory to be published
+
+```console
+dotnet wait-for-package --directory ./packages
+```
+
+#### Wait for the specified NuGet packages to be published
+
+```console
+dotnet wait-for-package --file ./packages/MyPackage.1.2.3.nupkg
+```
+
 #### Wait no more than 15 minutes for a new version of a package to be published
 
 ```console
@@ -80,6 +92,8 @@ EXAMPLES:
     dotnet wait-for-package MyCompany.MyProduct
     dotnet wait-for-package MyCompany.MyProduct@1.2.3
     dotnet wait-for-package MyCompany.MyProduct MyCompany.MyOtherProduct@1.2.3 --timeout 00:15:00
+    dotnet wait-for-package --directory ./packages
+    dotnet wait-for-package --file ./packages/MyCompany.MyProduct.1.2.3.nupkg
 
 ARGUMENTS:
     [package-id]    The package ID(s), including an optional version, to wait for new versions to be published
@@ -89,6 +103,9 @@ OPTIONS:
     -h, --help                         Prints help information
     -v, --version                      Prints version information
     -q, --no-logo                      Suppresses the logo
+    -f, --file                         The NuGet package file(s) to wait for to be published
+    -d, --directory                    The directories to recursively search for NuGet package files to wait for to be
+                                       published
     -i, --service-index                The NuGet service index URL to use
     -s, --since            00:05:00    The period of time before now to include when searching for the published
                                        package(s)

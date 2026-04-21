@@ -26,6 +26,15 @@ internal sealed class WaitCommand(
             console.WriteLine();
         }
 
+        await packages.DiscoverPackagesAsync(cancellationToken);
+
+        if (packages.DesiredPackages.Count == 0)
+        {
+            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning} No packages specified to wait for.[/]");
+            console.WriteLine();
+            return 1;
+        }
+
         var table = new Table();
 
         table.AddColumn("[bold]Package ID[/]");
@@ -87,7 +96,7 @@ internal sealed class WaitCommand(
 
         static void EmitTimeoutWarning(IAnsiConsole console)
         {
-            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning}  Processing cancelled or timed out.[/]");
+            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning} Processing cancelled or timed out.[/]");
             console.WriteLine();
         }
     }
