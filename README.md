@@ -38,7 +38,7 @@ dotnet wait-for-package --directory ./packages
 dotnet wait-for-package MyPackage
 ```
 
-#### Wait for a new version of a multiple named packages to be published
+#### Wait for a new version of multiple named packages to be published
 
 ```console
 dotnet wait-for-package MyPackage.Core MyPackage.Data MyPackage.UI
@@ -68,7 +68,7 @@ dotnet wait-for-package --file ./packages/MyPackage.1.2.3.nupkg
 dotnet wait-for-package MyPackage --timeout 00:15:00
 ```
 
-#### Wait for any new version of a named package to have be published within the last 30 minutes
+#### Wait for any new version of a named package to have been published within the last 30 minutes
 
 ```console
 dotnet wait-for-package MyPackage --since 00:30:00
