@@ -29,11 +29,14 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
         var comparer = OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
         var files = new HashSet<string>(comparer);
 
-        foreach (var path in _settings.Files)
+        foreach (var fileName in _settings.Files)
         {
+            string path;
+
             try
             {
-                files.Add(Path.GetFullPath(path));
+                path = Path.GetFullPath(fileName);
+                files.Add(path);
             }
             catch (Exception ex)
             {
@@ -42,8 +45,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
                     writer.Foreground(Color.Yellow)
                           .Write(Emoji.Known.Warning)
                           .Write(" Failed to resolve file path ")
-                          .BeginLink($"file://{path}", 0)
-                          .Write(path)
+                          .BeginLink($"file://{fileName}", 0)
+                          .Write(fileName)
                           .EndLink()
                           .Write(": ")
                           .WriteLine(ex.Message)
@@ -71,10 +74,14 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             }
         }
 
-        foreach (var path in _settings.Directories.Select(Path.GetFullPath))
+        foreach (var directory in _settings.Directories)
         {
+            string path = directory;
+
             try
             {
+                path = Path.GetFullPath(directory);
+
                 foreach (var file in Directory.EnumerateFiles(path, "*.nupkg", SearchOption.AllDirectories))
                 {
                     files.Add(file);
