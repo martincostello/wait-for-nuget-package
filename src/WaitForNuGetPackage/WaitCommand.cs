@@ -26,13 +26,9 @@ internal sealed class WaitCommand(
             console.WriteLine();
         }
 
-        await packages.DiscoverPackagesAsync(cancellationToken);
-
-        if (packages.DesiredPackages.Count == 0)
+        if (!await packages.DiscoverPackagesAsync(cancellationToken))
         {
-            console.MarkupLineInterpolated($"[{Color.Yellow}]{Emoji.Known.Warning} No packages specified to wait for.[/]");
-            console.WriteLine();
-            return 1;
+            return -1;
         }
 
         var table = new Table();

@@ -31,14 +31,71 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         foreach (var path in _settings.Files)
         {
-            files.Add(Path.GetFullPath(path));
+            try
+            {
+                files.Add(Path.GetFullPath(path));
+            }
+            catch (Exception ex)
+            {
+                _console.WriteAnsi((writer) =>
+                {
+                    writer.Foreground(Color.Yellow)
+                          .Write(Emoji.Known.Warning)
+                          .Write(" Failed to resolve file path ")
+                          .BeginLink($"file://{path}", 0)
+                          .Write(path)
+                          .EndLink()
+                          .Write(": ")
+                          .WriteLine(ex.Message)
+                          .WriteLine();
+                });
+
+                return false;
+            }
+
+            if (!File.Exists(path))
+            {
+                _console.WriteAnsi((writer) =>
+                {
+                    writer.Foreground(Color.Yellow)
+                          .Write(Emoji.Known.Warning)
+                          .Write(" NuGet package file ")
+                          .BeginLink($"file://{path}", 0)
+                          .Write(path)
+                          .EndLink()
+                          .WriteLine(" could not be found.")
+                          .WriteLine();
+                });
+
+                return false;
+            }
         }
 
         foreach (var path in _settings.Directories.Select(Path.GetFullPath))
         {
-            foreach (var file in Directory.EnumerateFiles(path, "*.nupkg", SearchOption.AllDirectories))
+            try
             {
-                files.Add(file);
+                foreach (var file in Directory.EnumerateFiles(path, "*.nupkg", SearchOption.AllDirectories))
+                {
+                    files.Add(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                _console.WriteAnsi((writer) =>
+                {
+                    writer.Foreground(Color.Yellow)
+                          .Write(Emoji.Known.Warning)
+                          .Write(" Failed to enumerate files in directory ")
+                          .BeginLink($"file://{path}", 0)
+                          .Write(path)
+                          .EndLink()
+                          .Write(": ")
+                          .WriteLine(ex.Message)
+                          .WriteLine();
+                });
+
+                return false;
             }
         }
 
@@ -49,7 +106,20 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         _pending.UnionWith(_desired);
 
-        return _desired.Count > 0;
+        if (_desired.Count < 1)
+        {
+            _console.WriteAnsi((writer) =>
+            {
+                writer.Foreground(Color.Yellow)
+                      .Write(Emoji.Known.Warning)
+                      .WriteLine(" No packages specified or found to wait for.")
+                      .WriteLine();
+            });
+
+            return false;
+        }
+
+        return true;
     }
 
     public void MarkPublished(string id, string version)
@@ -76,9 +146,23 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             // Ideally the package URL would come from the item so that we can be sure it points to the right registry
             var packageUrl = $"https://www.nuget.org/packages/{item.PackageId}/{item.PackageVersion}";
 
-            var timestamp = $"[{item.CommitTimestamp:u}]";
-            _console.MarkupLineInterpolated(
-                $"[{textColor}]{timestamp} {Emoji.Known.Package} Package [link={packageUrl}][{packageNameColor}]{item.PackageId}[/]@[{packageVersionColor}]{item.PackageVersion}[/][/] was published.[/]");
+            _console.WriteAnsi((writer) =>
+            {
+                writer.Foreground(textColor)
+                      .Write($"[{item.CommitTimestamp:u}]")
+                      .Write(" ")
+                      .Write(Emoji.Known.Package)
+                      .Write(" Package ")
+                      .BeginLink(packageUrl, 0)
+                      .Foreground(packageNameColor)
+                      .Write(item.PackageId)
+                      .Foreground(textColor)
+                      .Write("@")
+                      .Foreground(packageVersionColor)
+                      .Write(item.PackageVersion)
+                      .EndLink()
+                      .WriteLine(" was published.");
+            });
         }
 
         return found;
