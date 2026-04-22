@@ -11,6 +11,8 @@
 
 Waits for a new version of a NuGet package to be published.
 
+Packages can be specified by name, or by local file or directory.
+
 ## Quick Start
 
 To install the tool and wait for a NuGet package to be published
@@ -21,28 +23,28 @@ run the following commands:
 dotnet tool install --global MartinCostello.WaitForNuGetPackage
 
 # Create a NuGet package and publish it to NuGet.org
-dotnet pack MyPackage --output .
-dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json
+dotnet pack MyPackage --output ./packages
+dotnet nuget push "./packages/*.nupkg" --source https://api.nuget.org/v3/index.json
 
-# Wait for the package to be published and indexed
-dotnet wait-for-package MyPackage
+# Wait for the packages in the output directory to be published and indexed
+dotnet wait-for-package --directory ./packages
 ```
 
 ### Examples
 
-#### Wait for a new version of a package to be published
+#### Wait for a new version of a named package to be published
 
 ```console
 dotnet wait-for-package MyPackage
 ```
 
-#### Wait for a new version of a multiple packages to be published
+#### Wait for a new version of a multiple named packages to be published
 
 ```console
 dotnet wait-for-package MyPackage.Core MyPackage.Data MyPackage.UI
 ```
 
-#### Wait for a specific version of a package to be published
+#### Wait for a specific version of a named package to be published
 
 ```console
 dotnet wait-for-package MyPackage@1.2.3
@@ -60,19 +62,19 @@ dotnet wait-for-package --directory ./packages
 dotnet wait-for-package --file ./packages/MyPackage.1.2.3.nupkg
 ```
 
-#### Wait no more than 15 minutes for a new version of a package to be published
+#### Wait no more than 15 minutes for a new version of a named package to be published
 
 ```console
 dotnet wait-for-package MyPackage --timeout 00:15:00
 ```
 
-#### Wait for any new version of a package to have be published within the last 30 minutes
+#### Wait for any new version of a named package to have be published within the last 30 minutes
 
 ```console
 dotnet wait-for-package MyPackage --since 00:30:00
 ```
 
-#### Wait for a new version of a package to be published to a custom NuGet feed
+#### Wait for a new version of a named package to be published to a custom NuGet feed
 
 > [!NOTE]
 > Your custom NuGet feed must implement the [NuGet Catalog resource](https://learn.microsoft.com/nuget/api/catalog-resource).
