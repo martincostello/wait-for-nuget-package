@@ -43,6 +43,8 @@ internal static class Waiter
             config.AddExample(["MyCompany.MyProduct"]);
             config.AddExample(["MyCompany.MyProduct@1.2.3"]);
             config.AddExample(["MyCompany.MyProduct", "MyCompany.MyOtherProduct@1.2.3", "--timeout", "00:15:00"]);
+            config.AddExample(["--directory", "./packages"]);
+            config.AddExample(["--file", "./packages/MyCompany.MyProduct.1.2.3.nupkg"]);
             config.ConfigureConsole(console);
             config.SetApplicationName("dotnet wait-for-package");
             config.SetInterceptor(new TimeoutInterceptor(cts));

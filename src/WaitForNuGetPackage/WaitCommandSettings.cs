@@ -21,6 +21,20 @@ internal sealed class WaitCommandSettings : CommandSettings
     public bool? NoLogo { get; set; }
 
     /// <summary>
+    /// Gets or sets the optional NuGet package files to wait for to be published.
+    /// </summary>
+    [CommandOption("-f|--file")]
+    [Description("The NuGet package file(s) to wait for to be published.")]
+    public string[] Files { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the optional directories to search recursively for NuGet package files to wait for to be published.
+    /// </summary>
+    [CommandOption("-d|--directory")]
+    [Description("The directories to recursively search for NuGet package files to wait for to be published.")]
+    public string[] Directories { get; set; } = [];
+
+    /// <summary>
     /// Gets or sets the packages to wait on being published.
     /// </summary>
     [CommandArgument(0, "[package-id]")]
@@ -59,9 +73,9 @@ internal sealed class WaitCommandSettings : CommandSettings
     /// <inheritdoc/>
     public override ValidationResult Validate()
     {
-        if (Packages.Length < 1)
+        if (Directories.Length + Files.Length + Packages.Length < 1)
         {
-            return ValidationResult.Error("At least one NuGet package to wait for must be specified.");
+            return ValidationResult.Error("At least one NuGet package name, package file or directory containing NuGet packages to wait for must be specified.");
         }
 
         foreach (var package in Packages)
