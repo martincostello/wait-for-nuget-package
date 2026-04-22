@@ -95,7 +95,7 @@ public static class IntegrationTests
     public static async Task Main_Returns_Minus_One_If_Invalid_Package_File()
     {
         // Act
-        var actual = await Program.Main(["--file", "::::::"]);
+        var actual = await Program.Main(["--file", "\0"]);
 
         // Assert
         actual.ShouldBe(-1);
