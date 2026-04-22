@@ -54,7 +54,7 @@ dotnet wait-for-package MyPackage@1.2.3
 dotnet wait-for-package --directory ./packages
 ```
 
-#### Wait for the specified NuGet packages to be published
+#### Wait for the specified NuGet package file to be published
 
 ```console
 dotnet wait-for-package --file ./packages/MyPackage.1.2.3.nupkg

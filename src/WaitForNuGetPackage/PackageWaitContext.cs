@@ -34,10 +34,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             files.Add(Path.GetFullPath(path));
         }
 
-        foreach (var directory in _settings.Directories)
+        foreach (var path in _settings.Directories.Select(Path.GetFullPath))
         {
-            var path = Path.GetFullPath(directory);
-
             foreach (var file in Directory.EnumerateFiles(path, "*.nupkg", SearchOption.AllDirectories))
             {
                 files.Add(file);
@@ -46,10 +44,10 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         if (files.Count > 0)
         {
-            _desired.AddRange(await GetPackageMetadataAsync(files, cancellationToken));
+            _desired.UnionWith(await GetPackageMetadataAsync(files, cancellationToken));
         }
 
-        _pending.AddRange(_desired);
+        _pending.UnionWith(_desired);
 
         return _desired.Count > 0;
     }

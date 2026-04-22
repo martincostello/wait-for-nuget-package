@@ -75,7 +75,7 @@ internal sealed class WaitCommandSettings : CommandSettings
     {
         if (Directories.Length + Files.Length + Packages.Length < 1)
         {
-            return ValidationResult.Error("At least one NuGet package name or file to wait for must be specified.");
+            return ValidationResult.Error("At least one NuGet package name, package file or directory containing NuGet packages to wait for must be specified.");
         }
 
         foreach (var package in Packages)
