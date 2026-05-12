@@ -9,7 +9,7 @@
     <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.4" />
     <PackageVersion Include="JunitXml.TestLogger" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.3.26207.106" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.4.26230.115" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
     <PackageVersion Include="NuGet.Packaging" Version="7.6.0" />
@@ -32,8 +32,8 @@
     <PackageVersion Update="System.Text.Json" Version="10.0.10" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net11.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.3.26207.106" />
-    <PackageVersion Update="System.Formats.Asn1" Version="11.0.0-preview.3.26207.106" />
-    <PackageVersion Update="System.Text.Json" Version="11.0.0-preview.3.26207.106" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.4.26230.115" />
+    <PackageVersion Update="System.Formats.Asn1" Version="11.0.0-preview.4.26230.115" />
+    <PackageVersion Update="System.Text.Json" Version="11.0.0-preview.4.26230.115" />
   </ItemGroup>
 </Project>
