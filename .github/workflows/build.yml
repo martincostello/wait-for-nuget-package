@@ -219,6 +219,7 @@ jobs:
       deployment: false
 
     permissions:
+      actions: read
       contents: read
       id-token: write
 
