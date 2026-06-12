@@ -81,6 +81,30 @@ internal sealed class WaitCommand(
             var plural = count is 1 ? string.Empty : "s";
 
             console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
+
+            if (packages.ObservedPackages.Count > 0 &&
+                settings.NoGitHubSummary is not true &&
+                Environment.GetEnvironmentVariable("GITHUB_ACTIONS") is "true" &&
+                Environment.GetEnvironmentVariable("GITHUB_STEP_SUMMARY") is { Length: > 0 } stepSummaryPath)
+            {
+                var builder = new StringBuilder()
+                    .AppendLine()
+                    .AppendLine($"## WaitForNuGetPackage Summary :package:")
+                    .AppendLine();
+
+                builder.AppendLine($"| **Package ID** | **Version** |")
+                       .AppendLine($"|:---------------|:------------|");
+
+                foreach ((var package, var version) in packages.ObservedPackages.OrderBy((p) => p.Id, comparer).ThenBy((p) => p.Version, comparer))
+                {
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"| [{package}](https://www.nuget.org/packages/{package}/{version}) | `{version}` |");
+                }
+
+                builder.AppendLine()
+                       .AppendLine();
+
+                await File.AppendAllTextAsync(stepSummaryPath, builder.ToString(), cancellationToken);
+            }
         }
         catch (OperationCanceledException)
         {
