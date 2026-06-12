@@ -101,18 +101,19 @@ ARGUMENTS:
     [package-id]    The package ID(s), including an optional version, to wait for new versions to be published
 
 OPTIONS:
-                           DEFAULT
-    -h, --help                         Prints help information
-    -v, --version                      Prints version information
-    -q, --no-logo                      Suppresses the logo
-    -f, --file                         The NuGet package file(s) to wait for to be published
-    -d, --directory                    The directories to recursively search for NuGet package files to wait for to be
-                                       published
-    -i, --service-index                The NuGet service index URL to use
-    -s, --since            00:05:00    The period of time before now to include when searching for the published
-                                       package(s)
-    -t, --timeout                      The period of time to wait for the package(s) to be published
-        --verbose                      Enables verbose logging
+                               DEFAULT
+    -h, --help                             Prints help information
+    -v, --version                          Prints version information
+    -q, --no-logo                          Suppresses the logo
+    -f, --file                             The NuGet package file(s) to wait for to be published
+    -d, --directory                        The directories to recursively search for NuGet package files to wait for to
+                                           be published
+    -i, --service-index                    The NuGet service index URL to use
+    -s, --since                00:05:00    The period of time before now to include when searching for the published
+                                           package(s)
+    -t, --timeout                          The period of time to wait for the package(s) to be published
+        --verbose                          Enables verbose logging
+        --no-github-summary                Suppresses the GitHub summary when running in GitHub Actions
 ```
 
 ## Building and Testing

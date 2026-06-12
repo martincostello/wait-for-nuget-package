@@ -70,6 +70,13 @@ internal sealed class WaitCommandSettings : CommandSettings
     [Description("Enables verbose logging.")]
     public bool? Verbose { get; set; }
 
+    /// <summary>
+    /// Gets or sets an optional value indicating whether to disable the GitHub summary.
+    /// </summary>
+    [CommandOption("--no-github-summary")]
+    [Description("Suppresses the GitHub summary when running in GitHub Actions.")]
+    public bool? NoGitHubSummary { get; set; }
+
     /// <inheritdoc/>
     public override ValidationResult Validate()
     {
