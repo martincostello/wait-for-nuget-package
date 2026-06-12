@@ -82,7 +82,7 @@ internal sealed class WaitCommand(
 
             console.MarkupLineInterpolated($"[{color}]{count} package{plural} found published after {elapsed}.[/]");
 
-            if (result == 0 &&
+            if (packages.ObservedPackages.Count > 0 &&
                 settings.NoGitHubSummary is not true &&
                 Environment.GetEnvironmentVariable("GITHUB_ACTIONS") is "true" &&
                 Environment.GetEnvironmentVariable("GITHUB_STEP_SUMMARY") is { Length: > 0 } stepSummaryPath)
