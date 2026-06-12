@@ -26,7 +26,13 @@ internal sealed class WaitCommand(
             console.WriteLine();
         }
 
-        if (!await packages.DiscoverPackagesAsync(cancellationToken))
+        var foundPackages = await console
+            .Status()
+            .Spinner(Spinner.Known.Dots)
+            .SpinnerStyle(Style.Parse("purple"))
+            .StartAsync("Discovering NuGet packages...", async (_) => await packages.DiscoverPackagesAsync(cancellationToken));
+
+        if (!foundPackages)
         {
             return -1;
         }
