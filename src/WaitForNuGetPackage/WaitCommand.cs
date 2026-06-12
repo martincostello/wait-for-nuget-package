@@ -89,7 +89,7 @@ internal sealed class WaitCommand(
             {
                 var builder = new StringBuilder()
                     .AppendLine()
-                    .AppendLine($"## WaitForNuGetPackage Summary")
+                    .AppendLine($"## WaitForNuGetPackage Summary :package:")
                     .AppendLine();
 
                 builder.AppendLine($"| **Package ID** | **Version** |")
