@@ -31,6 +31,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         foreach (var fileName in _settings.Files)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             string path;
 
             try
@@ -76,6 +78,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         foreach (var directory in _settings.Directories)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             string path = directory;
 
             try
@@ -84,10 +88,11 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
                 foreach (var file in Directory.EnumerateFiles(path, "*.nupkg", SearchOption.AllDirectories))
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     files.Add(file);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
             {
                 _console.WriteAnsi((writer) =>
                 {
