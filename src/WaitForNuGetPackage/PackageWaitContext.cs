@@ -172,6 +172,7 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
                       .Write("@")
                       .Foreground(packageVersionColor)
                       .Write(item.PackageVersion)
+                      .Foreground(textColor)
                       .EndLink()
                       .WriteLine(" was published.");
             });
