@@ -28,12 +28,12 @@
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.17" />
-    <PackageVersion Update="System.Text.Json" Version="9.0.17" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.18" />
+    <PackageVersion Update="System.Text.Json" Version="9.0.18" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.9" />
-    <PackageVersion Update="System.Formats.Asn1" Version="10.0.9" />
-    <PackageVersion Update="System.Text.Json" Version="10.0.9" />
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.10" />
+    <PackageVersion Update="System.Formats.Asn1" Version="10.0.10" />
+    <PackageVersion Update="System.Text.Json" Version="10.0.10" />
   </ItemGroup>
 </Project>
