@@ -14,7 +14,7 @@
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
     <PackageVersion Include="NuGet.Packaging" Version="7.6.0" />
     <PackageVersion Include="NuGet.Protocol" Version="7.6.0" />
-    <PackageVersion Include="NuGet.Protocol.Catalog" Version="5.0.0-main-14320323" />
+    <PackageVersion Include="NuGet.Protocol.Catalog" Version="5.0.0-prabora-needs-sponsorship-12490972" />
     <PackageVersion Include="Polly.Extensions" Version="8.7.0" />
     <PackageVersion Include="ReportGenerator" Version="5.5.10" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
