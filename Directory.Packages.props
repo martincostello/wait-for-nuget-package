@@ -9,7 +9,7 @@
     <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.4" />
     <PackageVersion Include="JunitXml.TestLogger" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.6.26359.118" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
     <PackageVersion Include="NuGet.Packaging" Version="7.6.0" />
@@ -26,14 +26,14 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="xunit.v3.mtp-off" Version="3.2.2" />
   </ItemGroup>
-  <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
-    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.18" />
-    <PackageVersion Update="System.Text.Json" Version="9.0.18" />
-  </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.10" />
     <PackageVersion Update="System.Formats.Asn1" Version="10.0.10" />
     <PackageVersion Update="System.Text.Json" Version="10.0.10" />
+  </ItemGroup>
+  <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net11.0')) ">
+    <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="11.0.0-preview.6.26359.118" />
+    <PackageVersion Update="System.Formats.Asn1" Version="11.0.0-preview.6.26359.118" />
+    <PackageVersion Update="System.Text.Json" Version="11.0.0-preview.6.26359.118" />
   </ItemGroup>
 </Project>
