@@ -16,7 +16,7 @@
     <PackageVersion Include="NuGet.Protocol" Version="7.6.0" />
     <PackageVersion Include="NuGet.Protocol.Catalog" Version="5.0.0-main-14320323" />
     <PackageVersion Include="Polly.Extensions" Version="8.7.0" />
-    <PackageVersion Include="ReportGenerator" Version="5.5.10" />
+    <PackageVersion Include="ReportGenerator" Version="5.5.11" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Spectre.Console" Version="0.57.2" />
     <PackageVersion Include="Spectre.Console.Cli" Version="0.55.0" />
