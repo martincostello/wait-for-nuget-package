@@ -100,7 +100,7 @@ internal sealed class NuGetRepository(
     {
         var delay = TimeSpan.FromSeconds(10);
         var repository = Repository.Factory.GetCoreV3(settings.ServiceIndexUrl);
-        var resource = await repository.GetResourceAsync<PackageSearchResource>();
+        var resource = await repository.GetResourceAsync<PackageSearchResource>() ?? throw new InvalidOperationException("The package search resource could not be found.");
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -120,7 +120,7 @@ internal sealed class NuGetRepository(
         CancellationToken cancellationToken)
     {
         var repository = Repository.Factory.GetCoreV3(settings.ServiceIndexUrl);
-        var resource = await repository.GetResourceAsync<PackageSearchResource>();
+        var resource = await repository.GetResourceAsync<PackageSearchResource>() ?? throw new InvalidOperationException("The package search resource could not be found.");
 
         bool result = true;
 
