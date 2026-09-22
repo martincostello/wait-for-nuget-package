@@ -188,9 +188,27 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
         return result;
     }
 
+    private static bool TryCreateFileUri(string path, out string uri)
+    {
+        if (Uri.TryCreate(path, UriKind.Absolute, out var result) && result.IsFile)
+        {
+            uri = result.AbsoluteUri;
+            return true;
+        }
+
+        uri = string.Empty;
+        return false;
+    }
+
     private string Link(string path)
     {
         var escaped = Markup.Escape(path);
-        return _console.Profile.Capabilities.Links ? $"[link=file://{path}]{escaped}[/]" : escaped;
+
+        if (_console.Profile.Capabilities.Links && TryCreateFileUri(path, out var uri))
+        {
+            return $"[link={Markup.Escape(uri)}]{escaped}[/]";
+        }
+
+        return escaped;
     }
 }

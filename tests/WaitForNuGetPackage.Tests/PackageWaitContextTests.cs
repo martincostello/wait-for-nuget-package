@@ -66,6 +66,29 @@ public static class PackageWaitContextTests
         console.Output.ShouldContain("could not be found.");
     }
 
+    [Fact]
+    public static async Task DiscoverPackagesAsync_Reports_Missing_File_With_Markup_Characters_In_Path()
+    {
+        // Arrange
+        var cancellationToken = TestContext.Current.CancellationToken;
+
+        using var console = new TestConsole().WithWideProfile();
+
+        var missingFile = Path.Combine(Path.GetTempPath(), $"pkg [{Guid.NewGuid()}].nupkg");
+        var settings = new WaitCommandSettings() { Files = [missingFile] };
+        var context = new PackageWaitContext(console, settings);
+
+        // Act
+        bool actual = await context.DiscoverPackagesAsync(cancellationToken);
+
+        // Assert
+        actual.ShouldBeFalse();
+
+        console.Output.ShouldNotContain('\u001b');
+        console.Output.ShouldContain("could not be found.");
+        console.Output.ShouldContain(missingFile);
+    }
+
     private static TestConsole WithWideProfile(this TestConsole console)
     {
         console.Profile.Width = 400;
