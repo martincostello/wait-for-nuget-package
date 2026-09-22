@@ -9,6 +9,11 @@ internal static class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        if (OperatingSystem.IsWindows())
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+        }
+
         using var progress = TerminalProgress.Create();
 
         using var cts = new CancellationTokenSource();
