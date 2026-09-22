@@ -15,7 +15,7 @@ public static class PackageWaitContextTests
         // Arrange
         var cancellationToken = TestContext.Current.CancellationToken;
 
-        using var console = new TestConsole();
+        using var console = new TestConsole().WithWideProfile();
 
         var settings = new WaitCommandSettings() { Packages = ["Package.Id@1.2.3"] };
         var context = new PackageWaitContext(console, settings);
@@ -50,7 +50,7 @@ public static class PackageWaitContextTests
         // Arrange
         var cancellationToken = TestContext.Current.CancellationToken;
 
-        using var console = new TestConsole();
+        using var console = new TestConsole().WithWideProfile();
 
         var missingFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.nupkg");
         var settings = new WaitCommandSettings() { Files = [missingFile] };
@@ -64,5 +64,11 @@ public static class PackageWaitContextTests
 
         console.Output.ShouldNotContain('\u001b');
         console.Output.ShouldContain("could not be found.");
+    }
+
+    private static TestConsole WithWideProfile(this TestConsole console)
+    {
+        console.Profile.Width = 400;
+        return console;
     }
 }
