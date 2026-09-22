@@ -42,35 +42,16 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             }
             catch (Exception ex)
             {
-                _console.WriteAnsi((writer) =>
-                {
-                    writer.Foreground(Color.Yellow)
-                          .Write(Emoji.Known.Warning)
-                          .Write(" Failed to resolve file path ")
-                          .BeginLink($"file://{fileName}", 0)
-                          .Write(fileName)
-                          .EndLink()
-                          .Write(": ")
-                          .WriteLine(ex.Message)
-                          .WriteLine();
-                });
+                _console.MarkupLine($"[{Color.Yellow}]{Emoji.Known.Warning} Failed to resolve file path {Link(fileName)}: {Markup.Escape(ex.Message)}[/]");
+                _console.WriteLine();
 
                 return false;
             }
 
             if (!File.Exists(path))
             {
-                _console.WriteAnsi((writer) =>
-                {
-                    writer.Foreground(Color.Yellow)
-                          .Write(Emoji.Known.Warning)
-                          .Write(" NuGet package file ")
-                          .BeginLink($"file://{path}", 0)
-                          .Write(path)
-                          .EndLink()
-                          .WriteLine(" could not be found.")
-                          .WriteLine();
-                });
+                _console.MarkupLine($"[{Color.Yellow}]{Emoji.Known.Warning} NuGet package file {Link(path)} could not be found.[/]");
+                _console.WriteLine();
 
                 return false;
             }
@@ -94,18 +75,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             }
             catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
             {
-                _console.WriteAnsi((writer) =>
-                {
-                    writer.Foreground(Color.Yellow)
-                          .Write(Emoji.Known.Warning)
-                          .Write(" Failed to enumerate files in directory ")
-                          .BeginLink($"file://{path}", 0)
-                          .Write(path)
-                          .EndLink()
-                          .Write(": ")
-                          .WriteLine(ex.Message)
-                          .WriteLine();
-                });
+                _console.MarkupLine($"[{Color.Yellow}]{Emoji.Known.Warning} Failed to enumerate files in directory {Link(path)}: {Markup.Escape(ex.Message)}[/]");
+                _console.WriteLine();
 
                 return false;
             }
@@ -120,13 +91,8 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
 
         if (_desired.Count < 1)
         {
-            _console.WriteAnsi((writer) =>
-            {
-                writer.Foreground(Color.Yellow)
-                      .Write(Emoji.Known.Warning)
-                      .WriteLine(" No packages specified or found to wait for.")
-                      .WriteLine();
-            });
+            _console.MarkupLine($"[{Color.Yellow}]{Emoji.Known.Warning} No packages specified or found to wait for.[/]");
+            _console.WriteLine();
 
             return false;
         }
@@ -158,24 +124,17 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
             // Ideally the package URL would come from the item so that we can be sure it points to the right registry
             var packageUrl = $"https://www.nuget.org/packages/{item.PackageId}/{item.PackageVersion}";
 
-            _console.WriteAnsi((writer) =>
+            var packageId = Markup.Escape(item.PackageId);
+            var packageVersion = Markup.Escape(item.PackageVersion);
+
+            var package = $"[{packageNameColor}]{packageId}[/][{textColor}]@[/][{packageVersionColor}]{packageVersion}[/]";
+
+            if (_console.Profile.Capabilities.Links)
             {
-                writer.Foreground(textColor)
-                      .Write($"[{item.CommitTimestamp:u}]")
-                      .Write(" ")
-                      .Write(Emoji.Known.Package)
-                      .Write(" Package ")
-                      .BeginLink(packageUrl, 0)
-                      .Foreground(packageNameColor)
-                      .Write(item.PackageId)
-                      .Foreground(textColor)
-                      .Write("@")
-                      .Foreground(packageVersionColor)
-                      .Write(item.PackageVersion)
-                      .Foreground(textColor)
-                      .EndLink()
-                      .WriteLine(" was published.");
-            });
+                package = $"[link={packageUrl}]{package}[/]";
+            }
+
+            _console.MarkupLine($"[{textColor}][[{item.CommitTimestamp:u}]] {Emoji.Known.Package} Package {package} was published.[/]");
         }
 
         return found;
@@ -227,5 +186,11 @@ internal sealed class PackageWaitContext(IAnsiConsole console, WaitCommandSettin
         }
 
         return result;
+    }
+
+    private string Link(string path)
+    {
+        var escaped = Markup.Escape(path);
+        return _console.Profile.Capabilities.Links ? $"[link=file://{path}]{escaped}[/]" : escaped;
     }
 }
