@@ -17,7 +17,7 @@ internal sealed class WaitCommand(
     NuGetRepository repository,
     CancellationTokenSource cancellationTokenSource) : AsyncCommand<WaitCommandSettings>
 {
-    protected override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings, CancellationToken cancellationToken)
+    public override async Task<int> ExecuteAsync(CommandContext context, WaitCommandSettings settings, CancellationToken cancellationToken)
     {
         if (settings.NoLogo is not true)
         {
