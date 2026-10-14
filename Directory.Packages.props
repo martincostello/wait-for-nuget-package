@@ -20,6 +20,7 @@
     <PackageVersion Include="Spectre.Console.Cli" Version="0.57.2" />
     <PackageVersion Include="Spectre.Console.Cli.Testing" Version="0.57.2" />
     <PackageVersion Include="Spectre.Console.Testing" Version="0.57.2" />
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="8.0.2" />
     <PackageVersion Include="System.Text.Json" Version="8.0.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
     <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.2" />
@@ -27,11 +28,13 @@
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net9.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="9.0.21" />
+    <PackageVersion Update="System.Security.Cryptography.Pkcs" Version="9.0.21" />
     <PackageVersion Update="System.Text.Json" Version="9.0.21" />
   </ItemGroup>
   <ItemGroup Condition=" $([MSBuild]::IsTargetFrameworkCompatible($(TargetFramework), 'net10.0')) ">
     <PackageVersion Update="Microsoft.Extensions.Logging.Console" Version="10.0.13" />
     <PackageVersion Update="System.Formats.Asn1" Version="10.0.13" />
+    <PackageVersion Update="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Update="System.Text.Json" Version="10.0.13" />
   </ItemGroup>
 </Project>
