@@ -72,10 +72,9 @@ internal static class ServiceCollectionExtensions
 
         services.AddLogging((builder) =>
         {
-            var level =
-                args.Contains("--verbose", StringComparer.OrdinalIgnoreCase) ?
-                LogLevel.Debug :
-                LogLevel.Warning;
+            var level = args.Contains("--verbose", StringComparer.OrdinalIgnoreCase)
+                ? LogLevel.Debug
+                : LogLevel.Warning;
 
             builder.AddConsole()
                    .AddFilter("Microsoft", LogLevel.Warning)
