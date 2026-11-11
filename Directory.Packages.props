@@ -10,8 +10,8 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
-    <PackageVersion Include="NuGet.Packaging" Version="7.9.0" />
-    <PackageVersion Include="NuGet.Protocol" Version="7.9.0" />
+    <PackageVersion Include="NuGet.Packaging" Version="8.0.0" />
+    <PackageVersion Include="NuGet.Protocol" Version="8.0.0" />
     <PackageVersion Include="NuGet.Protocol.Catalog" Version="5.0.0-main-14320323" />
     <PackageVersion Include="Polly.Extensions" Version="8.9.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
