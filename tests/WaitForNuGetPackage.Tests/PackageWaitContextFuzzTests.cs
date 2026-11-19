@@ -136,8 +136,9 @@ public static class PackageWaitContextFuzzTests
 
         foreach (var package in expected)
         {
-            fromDirectory.DesiredPackages.ShouldContain(package);
-            fromFiles.DesiredPackages.ShouldContain(package);
+            // DesiredNuGetPackage equality treats "*" as matching any version, so compare the raw values
+            fromDirectory.DesiredPackages.Select((p) => (p.Id, p.Version)).ShouldContain((package.Id, package.Version));
+            fromFiles.DesiredPackages.Select((p) => (p.Id, p.Version)).ShouldContain((package.Id, package.Version));
         }
     }
 

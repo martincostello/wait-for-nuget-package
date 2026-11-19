@@ -24,7 +24,9 @@ public static class PackageSpecificationFuzzTests
 
         // Assert
         validation.Successful.ShouldBeTrue(validation.Message);
-        desired.ShouldBe([new DesiredNuGetPackage(id.Value, version.Value)]);
+
+        // DesiredNuGetPackage equality treats "*" as matching any version, so compare the raw values
+        desired.Select((p) => (p.Id, p.Version)).ShouldBe([(id.Value, version.Value)]);
     }
 
     [Property]
@@ -39,8 +41,7 @@ public static class PackageSpecificationFuzzTests
 
         // Assert
         validation.Successful.ShouldBeTrue(validation.Message);
-        desired.ShouldBe([new DesiredNuGetPackage(id.Value, DesiredNuGetPackage.AnyVersion)]);
-        desired.ShouldAllBe((p) => p.Version == DesiredNuGetPackage.AnyVersion);
+        desired.Select((p) => (p.Id, p.Version)).ShouldBe([(id.Value, DesiredNuGetPackage.AnyVersion)]);
     }
 
     [Property]
