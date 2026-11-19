@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\src\WaitForNuGetPackage\WaitForNuGetPackage.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FsCheck.Xunit.v3" />
     <PackageReference Include="GitHubActionsTestLogger" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="Shouldly" />
