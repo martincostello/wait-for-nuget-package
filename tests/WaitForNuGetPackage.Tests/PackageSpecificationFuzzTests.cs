@@ -133,6 +133,19 @@ public static class PackageSpecificationFuzzTests
         settings.Validate().Successful.ShouldBe(Uri.TryCreate(url.Value, UriKind.Absolute, out _));
     }
 
+    [Property]
+    public static void Service_Index_Url_Is_Valid_If_Absolute(GeneratedPackageId host, bool secure, byte port)
+    {
+        var scheme = secure ? "https" : "http";
+        var url = $"{scheme}://{host.Value.Replace('_', '-')}:{1024 + port}/v3/index.json";
+
+        var settings = new WaitCommandSettings() { Packages = ["Package"], ServiceIndexUrl = url };
+
+        var validation = settings.Validate();
+
+        validation.Successful.ShouldBeTrue(validation.Message);
+    }
+
     private static async Task<IReadOnlyCollection<DesiredNuGetPackage>> Discover(WaitCommandSettings settings)
     {
         using var console = new TestConsole();

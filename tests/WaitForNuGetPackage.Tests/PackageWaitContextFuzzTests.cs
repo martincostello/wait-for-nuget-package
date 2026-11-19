@@ -157,7 +157,9 @@ public static class PackageWaitContextFuzzTests
     {
         Directory.CreateDirectory(directory);
 
-        var path = Path.Combine(directory, $"{id}.{version}.nupkg");
+        // Use a unique file name as different IDs and versions can otherwise map to the
+        // same name (e.g. "A.1" + "2.3.1" and "A" + "1.2.3.1"), or to reserved device names on Windows.
+        var path = Path.Combine(directory, $"{Guid.NewGuid():N}.nupkg");
 
         using var stream = File.Create(path);
         using var archive = new ZipArchive(stream, ZipArchiveMode.Create);

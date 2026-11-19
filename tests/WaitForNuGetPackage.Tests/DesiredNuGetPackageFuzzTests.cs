@@ -10,12 +10,12 @@ namespace MartinCostello.WaitForNuGetPackage;
 public static class DesiredNuGetPackageFuzzTests
 {
     [Property]
-    public static void Equals_Is_Reflexive(GeneratedPackageId id, GeneratedPackageVersion version)
+    public static void Equals_Returns_True_For_Equivalent_Instances(GeneratedPackageId id, GeneratedPackageVersion version)
     {
         var target = new DesiredNuGetPackage(id.Value, version.Value);
+        var other = new DesiredNuGetPackage(id.Value, version.Value);
 
-        target.Equals(target).ShouldBeTrue();
-        target.Equals(new DesiredNuGetPackage(id.Value, version.Value)).ShouldBeTrue();
+        target.Equals(other).ShouldBeTrue();
     }
 
     [Property]
